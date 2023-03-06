@@ -11,6 +11,6 @@ def decrypt_data(data_c, key):
     data = []
     k = [ord(s) for s in key]
     for c in data_c:
-        m = (c - key) % 26
+        m = (c - k) % 26
         data.append(m)
     return data

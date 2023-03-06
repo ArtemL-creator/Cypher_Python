@@ -2,6 +2,7 @@ import random
 
 import Caesar
 import Affine_cipher
+import Polyalphabetic_substitutions
 import read_write_file
 import detectEnglish
 
@@ -205,9 +206,9 @@ def main():
 
     ''' Задание 8'''
     key = 'magistr'
-    encrypt_data = read_write_file.read_data_1byte("c3_subst_c_all.png")
-    decrypt_data = Caesar.decrypt_data_for_4(encrypt_data, key)
-    read_write_file.write_data_1byte('c3_subst_c_all_decrypt.png', decrypt_data)
+    encrypt_data = read_write_file.read_data_1byte("im6_vigener_c_all.bmp")
+    decrypt_data = Polyalphabetic_substitutions.decrypt_data(encrypt_data, key)
+    read_write_file.write_data_1byte('im6_vigener_c_all_decrypt.bmp', decrypt_data)
 
 if __name__ == "__main__":
     main()
