@@ -204,11 +204,69 @@ def main():
     print("decrypt_text:\n", txt)
     '''
 
-    ''' Задание 8'''
+    ''' Задание 8.1
+    encrypt_data = read_write_file.read_data_1byte('im6_vigener_c_all.bmp')
     key = 'magistr'
-    encrypt_data = read_write_file.read_data_1byte("im6_vigener_c_all.bmp")
-    decrypt_data = Polyalphabetic_substitutions.decrypt_data(encrypt_data, key)
+    decrypt_data = []
+    for i in range(len(encrypt_data)):
+        m = (encrypt_data[i] - ord(key[i % len(key)])) % 256
+        decrypt_data.append(m)
     read_write_file.write_data_1byte('im6_vigener_c_all_decrypt.bmp', decrypt_data)
+    '''
+    ''' Задание 8.2
+    data = read_write_file.read_data_1byte('im6_vigener_c_all_decrypt.bmp')
+    key = 'magistr'
+    encrypt_data = []
+
+    for i, d in enumerate(data[50:]):
+        encrypt_data.append((d + ord(key[i % len(key)])) % 256)
+
+    read_write_file.write_data_1byte('im6_vigener_c_all_decrypt_encrypt.bmp', data[:50] + encrypt_data)
+    '''
+
+    ''' Задание 10'''
+    encrypt_data = read_write_file.read_data_1byte('text4_vigener_c_all.txt')
+    word = 'housewives'
+
+    for i in range(len(encrypt_data)):
+        key = ''
+        ww = encrypt_data[i:i+len(word)]
+        for j, w in enumerate(ww):
+            k = (w - ord(word[j % len(word)])) % 256
+            # print(k)
+            key += chr(k)
+        is_english = detectEnglish.isEnglish(key[:4])
+        if is_english:
+            print(key)
+
+    # key = key[4:10] + 't'
+    # print(key)
+    key = 'student'
+    decrypt_data = []
+    for i, e in enumerate(encrypt_data):
+        decrypt_data.append((e - ord(key[i % len(key)])) % 256)
+    read_write_file.write_data_1byte('text4_vigener_c_all_decrypt.txt', decrypt_data)
+
+    ''' Задание 11'''
+    encrypt_data = read_write_file.read_data_1byte('text1_vigener_c.txt')
+    word = 'it therefore'
+    for i in range(len(encrypt_data)):
+        key = ''
+        ww = encrypt_data[i:i+len(word)]
+        for j, w in enumerate(ww):
+            k = (w - ord(word[j % len(word)])) % 256
+            key += chr(k)
+        # print(key)
+        is_english = detectEnglish.isEnglish(key[:3])
+        if is_english:
+            print(key)
+    print(key)
+    key = 'KEYBOARD'
+    decrypt_data = []
+    for i, e in enumerate(encrypt_data[48:]):
+        decrypt_data.append((e - ord(key[i % len(key)])) % 256)
+    read_write_file.write_data_1byte('text1_vigener_c_decrypt.txt', decrypt_data)
+
 
 if __name__ == "__main__":
     main()
