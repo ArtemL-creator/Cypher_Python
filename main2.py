@@ -9,8 +9,9 @@ def task1():
     data = read_write_file.read_data_1byte('im3_hill_c_all.bmp')
     k = ([[189, 58], [21, 151]])
     k_ = hill.inverted_k(k, 256)
-    data_de = hill.decrypt_data(data, k_, 256)
-    read_write_file.write_data_1byte('im3_hill_c_all_1.bmp', data_de)
+    decrypt_data = hill.decrypt_data(data, k_, 256)
+    read_write_file.write_data_1byte('im3_hill_c_all_decrypt.bmp', decrypt_data)
+    print("Task 1 completed")
 
 
 def task2():
@@ -18,10 +19,11 @@ def task2():
     data = read_write_file.read_data_1byte('m18_hill_c_all.bmp')
     k = ([[47, 239], [119, 108]])
     k_ = hill.inverted_k(k, 256)
-    data_de = hill.decrypt_data(data, k_, 256)
-    read_write_file.write_data_1byte('m18_hill_c_all_1.bmp', data_de)
-    data[0:50] = data_de[0:50]
-    read_write_file.write_data_1byte('m18.bmp', data)
+    decrypt_data = hill.decrypt_data(data, k_, 256)
+    read_write_file.write_data_1byte('m18_hill_c_all_decrypt.bmp', decrypt_data)
+    data[0:50] = decrypt_data[0:50]
+    read_write_file.write_data_1byte('m18_hill_c_all_decrypt_encrypt.bmp', data)
+    print("Task 2 completed")
 
 
 def task3():
@@ -40,11 +42,11 @@ def task3():
                     print('a =', a)
                     print('b =', b)
                     decrypt_data = hill.decrypt_data(data, a, b)
-                    read_write_file.write_data_1byte('p1.png', decrypt_data)
+                    read_write_file.write_data_1byte('p1_hill_c_all_decrypt.png', decrypt_data)
                     break
         if is_PNG:
             break
-
+    print("Task 3 completed")
 
 def task4():
     ''' Задание 4'''
@@ -53,7 +55,8 @@ def task4():
     c = [[data[0], data[2]], [data[1], data[3]]]
     k = np.dot(c, hill.inverted_k(m, 256)) % 256
     decrypt_data = hill.decrypt_data(data, hill.inverted_k(k, 256), 256)
-    read_write_file.write_data_1byte('b4.png', decrypt_data)
+    read_write_file.write_data_1byte('b4_hill_c_all_decrypt.png', decrypt_data)
+    print("Task 4 completed")
 
 
 def task5():
@@ -63,8 +66,13 @@ def task5():
     c = [[data[0], data[2]], [data[1], data[3]]]
     k = np.dot(c, hill.inverted_k(m, 256)) % 256
     decrypt_data = hill.decrypt_data(data, hill.inverted_k(k, 256), 256)
-    read_write_file.write_data_1byte('5.txt', decrypt_data)
+    read_write_file.write_data_1byte('text2_hill_c_all_decrypt.txt', decrypt_data)
+    print("Task 5 completed")
 
 
 if __name__ == '__main__':
     task1()
+    task2()
+    task3()
+    task4()
+    task5()

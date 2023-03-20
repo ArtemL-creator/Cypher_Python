@@ -1,5 +1,5 @@
 import numpy as np
-import affine
+import Affine_cipher
 
 
 def encrypt(m, k, l):
@@ -31,9 +31,9 @@ def decrypt_data(data, k, l):
 
 
 def inverted_k(k, l):
-    det = determinant(k)%l
+    det = determinant(k) % l
     modified_k = np.array([[k[1][1], -k[0][1]], [-k[1][0], k[0][0]]])
-    return affine.findModInverse(det, l) * modified_k % l
+    return Affine_cipher.findModInverse(det, l) * modified_k % l
 
 
 def determinant(k):
