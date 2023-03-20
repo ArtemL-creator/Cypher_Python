@@ -48,6 +48,7 @@ def task3():
             break
     print("Task 3 completed")
 
+
 def task4():
     ''' Задание 4'''
     data = read_write_file.read_data_1byte('b4_hill_c_all.png')
