@@ -7,8 +7,7 @@ import read_write_file
 import detectEnglish
 
 
-def main():
-    '''
+def example():
     m = 24
     key = 37
     c = Caesar.encrypt(m, key)
@@ -20,107 +19,97 @@ def main():
     print("encrypt_data = ", encrypt_data)
     decrypt_data = Caesar.decrypt_data(encrypt_data, key)
     print("descrypt_data = ", decrypt_data)
-    '''
 
-    '''
     data = read_write_file.read_data_1byte("f1.txt")
     print("data = ", data[0:15])
     txt = ''.join([chr(s) for s in data[0:15]])
     print("text = ", txt)
-    '''
 
-    '''
     data = read_write_file.read_data_1byte("f1.txt")
     print("data = ", data[0:15])
 
-    encrypt_data = Caesar.encrypt_data(data, key = 67)
+    encrypt_data = Caesar.encrypt_data(data, key=67)
     print("encrypt_data = ", encrypt_data[0:15])
 
     txt = ''.join([chr(s) for s in data[0:15]])
     print("encrypt_text = ", txt)
 
     read_write_file.write_data_1byte("f1_encrypt.txt", encrypt_data)
-    '''
 
-    '''
     encrypt_data = read_write_file.read_data_1byte("f1_encrypt.txt")
     print("encrypt_data = ", encrypt_data[0:15])
 
-    decrypt_data = Caesar.decrypt_data(encrypt_data, key = 67)
+    decrypt_data = Caesar.decrypt_data(encrypt_data, key=67)
     print("decrypt_data = ", decrypt_data[0:15])
 
     txt = ''.join([chr(s) for s in decrypt_data[0:15]])
     print("decrypt_text = ", txt)
 
     read_write_file.write_data_1byte("f1_decrypt.txt", decrypt_data)
-    '''
 
-    '''
     encrypt_data = read_write_file.read_data_1byte("f1_encrypt.txt")
     print("encrypt_data = ", encrypt_data[0:15])
 
     k = 0
-    while True :
-        decrypt_data = Caesar.decrypt_data(encrypt_data[0:15], key = k)
+    while True:
+        decrypt_data = Caesar.decrypt_data(encrypt_data[0:15], key=k)
         txt = ''.join([chr(s) for s in decrypt_data])
         print("decrypt_text = ", txt)
         is_english = detectEnglish.isEnglish(txt)
-        if is_english == True :
+        if is_english == True:
             break
         k = k + 1
 
-    '''
 
-    ''' Задание 1
+def task1():
     data = read_write_file.read_data_1byte('f2.png')
-    encrypt_data = Caesar.encrypt_data(data, key = 143)
+    encrypt_data = Caesar.encrypt_data(data, key=143)
     read_write_file.write_data_1byte('f2_encrypt.png', encrypt_data)
 
     data = read_write_file.read_data_1byte('f2_encrypt.png')
     k = 0
-    while True :
-        decrypt_data = Caesar.encrypt_data(data, key = k)
-        if decrypt_data[0] == 0x89 and decrypt_data[1] == 0x50 :
+    while True:
+        decrypt_data = Caesar.encrypt_data(data, key=k)
+        if decrypt_data[0] == 0x89 and decrypt_data[1] == 0x50:
             break
         print('k = ', k)
         k += 1
     read_write_file.write_data_1byte('f2_decrypt.png', decrypt_data)
-    '''
 
-    ''' Задание 2
+
+def task2():
     encrypt_data = read_write_file.read_data_1byte("t3_caesar_c_all.txt")
     print("encrypt_data = ", encrypt_data)
 
     k = 0
-    while True :
-        decrypt_data = Caesar.decrypt_data(encrypt_data, key = k)
+    while True:
+        decrypt_data = Caesar.decrypt_data(encrypt_data, key=k)
         txt = ''.join([chr(s) for s in decrypt_data])
         is_english = detectEnglish.isEnglish(txt)
-        if is_english == True :
+        if is_english == True:
             break
         k = k + 1
     print("decrypt_text:\n", txt)
-    '''
 
-    ''' Задание 3.1
+
+def task3():
     data = read_write_file.read_data_1byte('c4_caesar_c_all.bmp')
     k = 0
-    while True :
-        decrypt_data = Caesar.decrypt_data(data, key = k)
-        if decrypt_data[0] == 0x42 and decrypt_data[1] == 0x4D :
+    while True:
+        decrypt_data = Caesar.decrypt_data(data, key=k)
+        if decrypt_data[0] == 0x42 and decrypt_data[1] == 0x4D:
             break
         print('k = ', k)
         k += 1
     read_write_file.write_data_1byte('c4_caesar_c_all_decrypt.bmp', decrypt_data)
-    '''
-    ''' Задание 3.2 
+
     data_en = read_write_file.read_data_1byte('c4_caesar_c_all.bmp')
     data_dec = read_write_file.read_data_1byte('c4_caesar_c_all_decrypt.bmp')
     data_en[0:50] = data_dec[0:50]
     read_write_file.write_data_1byte('c4_caesar_c_all_decrypt_encrypt.bmp', data_en)
-    '''
 
-    ''' Задание 4
+
+def task4():
     k = [179, 109, 157, 182, 126, 141, 251, 220, 169, 237, 188, 131, 207, 22, 32, 242, 208, 68, 216, 170, 249, 199, 44,
          198, 206, 8, 148, 197, 136, 195, 159, 98, 175, 53, 123, 212, 233, 150, 6, 243, 38, 79, 156, 153, 2, 134, 47,
          215, 102,
@@ -143,9 +132,9 @@ def main():
     encrypt_data = read_write_file.read_data_1byte("c3_subst_c_all.png")
     decrypt_data = Caesar.decrypt_data_for_4(encrypt_data, k)
     read_write_file.write_data_1byte('c3_subst_c_all_decrypt.png', decrypt_data)
-    '''
 
-    ''' Задание 5.1
+
+def task5():
     encrypt_data = read_write_file.read_data_1byte("ff2_affine_c_all.bmp")
     a = 0
     b = 0
@@ -167,16 +156,14 @@ def main():
         else:
             break
     read_write_file.write_data_1byte('ff2_affine_c_all_decrypt.bmp', decrypt_data)
-    '''
 
-    ''' Задание 5.2
     data_en = read_write_file.read_data_1byte('ff2_affine_c_all.bmp')
     data_dec = read_write_file.read_data_1byte('ff2_affine_c_all_decrypt.bmp')
     data_en[0:50] = data_dec[0:50]
     read_write_file.write_data_1byte('ff2_affine_c_all_decrypt_encrypt.bmp', data_en)
-    '''
 
-    ''' Задание 6
+
+def task6():
     encrypt_data = read_write_file.read_data_1byte("text10_affine_c_all.txt")
     print("encrypt_data = ", encrypt_data)
 
@@ -202,9 +189,9 @@ def main():
         else:
             break
     print("decrypt_text:\n", txt)
-    '''
 
-    ''' Задание 8.1
+
+def task8():
     encrypt_data = read_write_file.read_data_1byte('im6_vigener_c_all.bmp')
     key = 'magistr'
     decrypt_data = []
@@ -212,8 +199,7 @@ def main():
         m = (encrypt_data[i] - ord(key[i % len(key)])) % 256
         decrypt_data.append(m)
     read_write_file.write_data_1byte('im6_vigener_c_all_decrypt.bmp', decrypt_data)
-    '''
-    ''' Задание 8.2
+
     data = read_write_file.read_data_1byte('im6_vigener_c_all_decrypt.bmp')
     key = 'magistr'
     encrypt_data = []
@@ -222,15 +208,15 @@ def main():
         encrypt_data.append((d + ord(key[i % len(key)])) % 256)
 
     read_write_file.write_data_1byte('im6_vigener_c_all_decrypt_encrypt.bmp', data[:50] + encrypt_data)
-    '''
 
-    ''' Задание 10'''
+
+def task10():
     encrypt_data = read_write_file.read_data_1byte('text4_vigener_c_all.txt')
     word = 'housewives'
 
     for i in range(len(encrypt_data)):
         key = ''
-        ww = encrypt_data[i:i+len(word)]
+        ww = encrypt_data[i:i + len(word)]
         for j, w in enumerate(ww):
             k = (w - ord(word[j % len(word)])) % 256
             # print(k)
@@ -247,12 +233,13 @@ def main():
         decrypt_data.append((e - ord(key[i % len(key)])) % 256)
     read_write_file.write_data_1byte('text4_vigener_c_all_decrypt.txt', decrypt_data)
 
-    ''' Задание 11'''
+
+def task11():
     encrypt_data = read_write_file.read_data_1byte('text1_vigener_c.txt')
     word = 'it therefore'
     for i in range(len(encrypt_data)):
         key = ''
-        ww = encrypt_data[i:i+len(word)]
+        ww = encrypt_data[i:i + len(word)]
         for j, w in enumerate(ww):
             k = (w - ord(word[j % len(word)])) % 256
             key += chr(k)
@@ -269,4 +256,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    task11()

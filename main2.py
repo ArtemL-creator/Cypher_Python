@@ -3,7 +3,8 @@ import numpy as np
 import hill
 import read_write_file
 
-def main():
+
+def task1():
     ''' Задание 1'''
     data = read_write_file.read_data_1byte('im3_hill_c_all.bmp')
     k = ([[189, 58], [21, 151]])
@@ -11,6 +12,8 @@ def main():
     data_de = hill.decrypt_data(data, k_, 256)
     read_write_file.write_data_1byte('im3_hill_c_all_1.bmp', data_de)
 
+
+def task2():
     ''' Задание 2'''
     data = read_write_file.read_data_1byte('m18_hill_c_all.bmp')
     k = ([[47, 239], [119, 108]])
@@ -20,6 +23,8 @@ def main():
     data[0:50] = data_de[0:50]
     read_write_file.write_data_1byte('m18.bmp', data)
 
+
+def task3():
     ''' Задание 3'''
     data = read_write_file.read_data_1byte('p1_hill_c_all.png')
     count_keys = 0
@@ -35,11 +40,13 @@ def main():
                     print('a =', a)
                     print('b =', b)
                     decrypt_data = hill.decrypt_data(data, a, b)
-                    read_write_file.write_data_1byte('p1.png', data_de)
+                    read_write_file.write_data_1byte('p1.png', decrypt_data)
                     break
         if is_PNG:
             break
 
+
+def task4():
     ''' Задание 4'''
     data = read_write_file.read_data_1byte('b4_hill_c_all.png')
     m = [[137, 78], [80, 71]]
@@ -48,6 +55,8 @@ def main():
     decrypt_data = hill.decrypt_data(data, hill.inverted_k(k, 256), 256)
     read_write_file.write_data_1byte('b4.png', decrypt_data)
 
+
+def task5():
     ''' Задание 5'''
     data = read_write_file.read_data_1byte('text2_hill_c_all.txt')
     m = [[87, 111], [104, 115]]
@@ -58,4 +67,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    task1()
