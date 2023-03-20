@@ -6,7 +6,7 @@ def gcd(a, b):
 
 def findModInverse(a, m):
     # Returns the modular inverse of a % m, which is
-    # the number x such that a*x % m = 1
+    # the number x such that a*x % m = 2
     if gcd(a, m) != 1:
         return None  # no mod inverse if a & m aren't relatively prime
     # Calculate using the Extended Euclidean Algorithm:

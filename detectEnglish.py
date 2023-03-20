@@ -1,4 +1,5 @@
 # Detect English module
+from pathlib import Path
 
 # To use, type this code:
 #   import detectEnglish
@@ -10,7 +11,7 @@ UPPERLETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 LETTERS_AND_SPACE = UPPERLETTERS + UPPERLETTERS.lower() + ' \t\n'
 
 def loadDictionary():
-    dictionaryFile = open('dictionary.txt')
+    dictionaryFile = open(Path('resources', '1', 'dictionary.txt'))
     englishWords = {}
     for word in dictionaryFile.read().split('\n'):
         englishWords[word] = None

@@ -1,8 +1,7 @@
-import random
+from pathlib import Path
 
 import Caesar
 import Affine_cipher
-import Polyalphabetic_substitutions
 import read_write_file
 import detectEnglish
 
@@ -20,12 +19,12 @@ def example():
     decrypt_data = Caesar.decrypt_data(encrypt_data, key)
     print("descrypt_data = ", decrypt_data)
 
-    data = read_write_file.read_data_1byte("f1.txt")
+    data = read_write_file.read_data_1byte(Path('resources', '1', 'f1.txt'))
     print("data = ", data[0:15])
     txt = ''.join([chr(s) for s in data[0:15]])
     print("text = ", txt)
 
-    data = read_write_file.read_data_1byte("f1.txt")
+    data = read_write_file.read_data_1byte(Path('resources', '1', 'f1.txt'))
     print("data = ", data[0:15])
 
     encrypt_data = Caesar.encrypt_data(data, key=67)
@@ -34,9 +33,9 @@ def example():
     txt = ''.join([chr(s) for s in data[0:15]])
     print("encrypt_text = ", txt)
 
-    read_write_file.write_data_1byte("f1_encrypt.txt", encrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'f1_encrypt.txt'), encrypt_data)
 
-    encrypt_data = read_write_file.read_data_1byte("f1_encrypt.txt")
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'f1_encrypt.txt'))
     print("encrypt_data = ", encrypt_data[0:15])
 
     decrypt_data = Caesar.decrypt_data(encrypt_data, key=67)
@@ -45,9 +44,9 @@ def example():
     txt = ''.join([chr(s) for s in decrypt_data[0:15]])
     print("decrypt_text = ", txt)
 
-    read_write_file.write_data_1byte("f1_decrypt.txt", decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'f1_decrypt.txt'), decrypt_data)
 
-    encrypt_data = read_write_file.read_data_1byte("f1_encrypt.txt")
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'f1_encrypt.txt'))
     print("encrypt_data = ", encrypt_data[0:15])
 
     k = 0
@@ -62,11 +61,11 @@ def example():
 
 
 def task1():
-    data = read_write_file.read_data_1byte('f2.png')
+    data = read_write_file.read_data_1byte(Path('resources', '1', 'f2.png'))
     encrypt_data = Caesar.encrypt_data(data, key=143)
-    read_write_file.write_data_1byte('f2_encrypt.png', encrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'f2_encrypt.png'), encrypt_data)
 
-    data = read_write_file.read_data_1byte('f2_encrypt.png')
+    data = read_write_file.read_data_1byte(Path('resources', '1', 'f2_encrypt.png'))
     k = 0
     while True:
         decrypt_data = Caesar.encrypt_data(data, key=k)
@@ -74,11 +73,11 @@ def task1():
             break
         print('k = ', k)
         k += 1
-    read_write_file.write_data_1byte('f2_decrypt.png', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'f2_decrypt.png'), decrypt_data)
 
 
 def task2():
-    encrypt_data = read_write_file.read_data_1byte("t3_caesar_c_all.txt")
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 't3_caesar_c_all.txt'))
     print("encrypt_data = ", encrypt_data)
 
     k = 0
@@ -93,7 +92,7 @@ def task2():
 
 
 def task3():
-    data = read_write_file.read_data_1byte('c4_caesar_c_all.bmp')
+    data = read_write_file.read_data_1byte(Path('resources', '1', 'c4_caesar_c_all.bmp'))
     k = 0
     while True:
         decrypt_data = Caesar.decrypt_data(data, key=k)
@@ -101,12 +100,12 @@ def task3():
             break
         print('k = ', k)
         k += 1
-    read_write_file.write_data_1byte('c4_caesar_c_all_decrypt.bmp', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'c4_caesar_c_all_decrypt.bmp'), decrypt_data)
 
-    data_en = read_write_file.read_data_1byte('c4_caesar_c_all.bmp')
-    data_dec = read_write_file.read_data_1byte('c4_caesar_c_all_decrypt.bmp')
+    data_en = read_write_file.read_data_1byte(Path('resources', '1', 'c4_caesar_c_all.bmp'))
+    data_dec = read_write_file.read_data_1byte(Path('resources', '1', 'c4_caesar_c_all_decrypt.bmp'))
     data_en[0:50] = data_dec[0:50]
-    read_write_file.write_data_1byte('c4_caesar_c_all_decrypt_encrypt.bmp', data_en)
+    read_write_file.write_data_1byte(Path('resources', '1', 'c4_caesar_c_all_decrypt_encrypt.bmp'), data_en)
 
 
 def task4():
@@ -129,13 +128,13 @@ def task4():
          40, 133,
          196, 139, 135, 240, 60, 25, 225, 85, 255, 246, 51, 28, 146, 74, 222, 186, 39, 77, 0, 20, 180, 154, 81, 248]
 
-    encrypt_data = read_write_file.read_data_1byte("c3_subst_c_all.png")
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'c3_subst_c_all.png'))
     decrypt_data = Caesar.decrypt_data_for_4(encrypt_data, k)
-    read_write_file.write_data_1byte('c3_subst_c_all_decrypt.png', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'c3_subst_c_all_decrypt.png'), decrypt_data)
 
 
 def task5():
-    encrypt_data = read_write_file.read_data_1byte("ff2_affine_c_all.bmp")
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'ff2_affine_c_all.bmp'))
     a = 0
     b = 0
     k = 0
@@ -155,16 +154,16 @@ def task5():
                 a += 1
         else:
             break
-    read_write_file.write_data_1byte('ff2_affine_c_all_decrypt.bmp', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'ff2_affine_c_all_decrypt.bmp'), decrypt_data)
 
-    data_en = read_write_file.read_data_1byte('ff2_affine_c_all.bmp')
-    data_dec = read_write_file.read_data_1byte('ff2_affine_c_all_decrypt.bmp')
+    data_en = read_write_file.read_data_1byte(Path('resources', '1', 'ff2_affine_c_all.bmp'))
+    data_dec = read_write_file.read_data_1byte(Path('resources', '1', 'ff2_affine_c_all_decrypt.bmp'))
     data_en[0:50] = data_dec[0:50]
-    read_write_file.write_data_1byte('ff2_affine_c_all_decrypt_encrypt.bmp', data_en)
+    read_write_file.write_data_1byte(Path('resources', '1', 'ff2_affine_c_all_decrypt_encrypt.bmp'), data_en)
 
 
 def task6():
-    encrypt_data = read_write_file.read_data_1byte("text10_affine_c_all.txt")
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'text10_affine_c_all.txt'))
     print("encrypt_data = ", encrypt_data)
 
     a = 0
@@ -192,26 +191,26 @@ def task6():
 
 
 def task8():
-    encrypt_data = read_write_file.read_data_1byte('im6_vigener_c_all.bmp')
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'im6_vigener_c_all.bmp'))
     key = 'magistr'
     decrypt_data = []
     for i in range(len(encrypt_data)):
         m = (encrypt_data[i] - ord(key[i % len(key)])) % 256
         decrypt_data.append(m)
-    read_write_file.write_data_1byte('im6_vigener_c_all_decrypt.bmp', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'im6_vigener_c_all_decrypt.bmp'), decrypt_data)
 
-    data = read_write_file.read_data_1byte('im6_vigener_c_all_decrypt.bmp')
+    data = read_write_file.read_data_1byte(Path('resources', '1', 'im6_vigener_c_all_decrypt.bmp'))
     key = 'magistr'
     encrypt_data = []
 
     for i, d in enumerate(data[50:]):
         encrypt_data.append((d + ord(key[i % len(key)])) % 256)
 
-    read_write_file.write_data_1byte('im6_vigener_c_all_decrypt_encrypt.bmp', data[:50] + encrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'im6_vigener_c_all_decrypt_encrypt.bmp'), data[:50] + encrypt_data)
 
 
 def task10():
-    encrypt_data = read_write_file.read_data_1byte('text4_vigener_c_all.txt')
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'text4_vigener_c_all.txt'))
     word = 'housewives'
 
     for i in range(len(encrypt_data)):
@@ -231,11 +230,11 @@ def task10():
     decrypt_data = []
     for i, e in enumerate(encrypt_data):
         decrypt_data.append((e - ord(key[i % len(key)])) % 256)
-    read_write_file.write_data_1byte('text4_vigener_c_all_decrypt.txt', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'text4_vigener_c_all_decrypt.txt'), decrypt_data)
 
 
 def task11():
-    encrypt_data = read_write_file.read_data_1byte('text1_vigener_c.txt')
+    encrypt_data = read_write_file.read_data_1byte(Path('resources', '1', 'text1_vigener_c.txt'))
     word = 'it therefore'
     for i in range(len(encrypt_data)):
         key = ''
@@ -252,7 +251,7 @@ def task11():
     decrypt_data = []
     for i, e in enumerate(encrypt_data[48:]):
         decrypt_data.append((e - ord(key[i % len(key)])) % 256)
-    read_write_file.write_data_1byte('text1_vigener_c_decrypt.txt', decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '1', 'text1_vigener_c_decrypt.txt'), decrypt_data)
 
 
 if __name__ == "__main__":
