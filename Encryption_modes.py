@@ -51,7 +51,7 @@ def encrypt_OFB(data_c, key, IV):
 def decrypt_CFB(data_c, key, IV):
     data = []
     for с in data_c:
-        x = Caesar.decrypt(IV, key)
+        x = Caesar.encrypt(IV, key)
         x = x ^ с
         IV = с
         data.append(x)
@@ -61,7 +61,7 @@ def decrypt_CFB(data_c, key, IV):
 def encrypt_CFB(data, key, IV):
     cypher_data = []
     for m in data:
-        x = Caesar.encrypt(IV, key)
+        x = Caesar.decrypt(IV, key)
         x = m ^ x
         IV = x
         cypher_data.append(x)

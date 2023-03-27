@@ -6,3 +6,7 @@
 /resources/3/z2_caesar_cfb_c_all_decrypt_encrypt.bmp
 /resources/3/z3_caesar_ctr_c_all_decrypt.bmp
 /resources/3/z3_caesar_ctr_c_all_decrypt_encrypt.bmp
+/resources/3/z1_caesar_cbc_c_all_decrypt_encrypt_ECB.bmp
+/resources/3/im8_caesar_ofb_c_all_decrypt_encrypt_ECB.bmp
+/resources/3/z2_caesar_cfb_c_all_decrypt_encrypt_ECB.bmp
+/resources/3/z3_caesar_ctr_c_all_decrypt_encrypt_ECB.bmp
