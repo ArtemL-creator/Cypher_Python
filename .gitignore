@@ -10,3 +10,8 @@
 /resources/3/im8_caesar_ofb_c_all_decrypt_encrypt_ECB.bmp
 /resources/3/z2_caesar_cfb_c_all_decrypt_encrypt_ECB.bmp
 /resources/3/z3_caesar_ctr_c_all_decrypt_encrypt_ECB.bmp
+/resources/3/CBC.bmp
+/resources/3/CFB.bmp
+/resources/3/CTR.bmp
+/resources/3/ECB.bmp
+/resources/3/OFB.bmp
