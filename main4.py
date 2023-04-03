@@ -15,6 +15,8 @@ def task1a():
     y = e.demux(x)
     print('y={}'.format(y))
 
+    print("Task 1a completed")
+
 
 # 0011    1011    1101   1100
 # x=0011101111011100
@@ -25,6 +27,8 @@ def task1b():
     x = [9, 11, 4, 2]
     y = e.mux(x)
     print('y={}'.format(bin(y)[2:].zfill(16)))
+
+    print("Task 1b completed")
 
 
 # y=0010010010111001
@@ -39,6 +43,8 @@ def task2():
     cypher_data = e.encrypt_data(data, key=k, rounds=4)
     print('cypher_data={}'.format(cypher_data))
 
+    print("Task 2 completed")
+
 
 ''' Задание 3'''
 
@@ -51,6 +57,8 @@ def task3a():
     x_ = e.asbox(sx)
     print('as[{}]={}'.format(sx, x_))
 
+    print("Task 3a completed")
+
 
 def task3b():
     e = spn1.SPN1()
@@ -59,6 +67,8 @@ def task3b():
     print('x={}--->px={}'.format(bin(x)[2:].zfill(16), bin(px)[2:].zfill(16)))
     x_ = e.apbox(px)
     print('px={}--->x_={}'.format(bin(px)[2:].zfill(16), bin(x_)[2:].zfill(16)))
+
+    print("Task 3b completed")
 
 
 def task3c():
@@ -80,6 +90,8 @@ def task4(k=734533245):
     print()
     print(e.round_keys(k))
 
+    print("Task 4 completed")
+
 
 ''' Задание 5'''
 
@@ -96,6 +108,8 @@ def task5():
     print('y={}'.format(bin(y)[2:].zfill(16)))
     print('x_={}'.format(bin(x_)[2:].zfill(16)))
 
+    print("Task 5 completed")
+
 
 ''' Задание 6'''
 
@@ -110,6 +124,8 @@ def task6():
     print('y={}'.format(y))
     print('x_={}'.format(x_))
 
+    print("Task 6 completed")
+
 
 ''' Задание 7'''
 
@@ -117,13 +133,15 @@ def task6():
 def task7():
     e = spn1.SPN1()
     # шифрование
-    data = read2b('123.txt')
+    data = read2b(Path('resources', '4', '123.txt'))
     cypher_data = e.encrypt_data(data, key=452342216, rounds=4)
-    write2b('123_encrypt.txt', cypher_data)
+    write2b(Path('resources', '4', '123_encrypt.txt'), cypher_data)
     # расшифрование
-    data = read2b('123_encrypt.txt')
+    data = read2b(Path('resources', '4', '123_encrypt.txt'))
     decrypt_data = e.decrypt_data(data, key=452342216, rounds=4)
-    write2b('123_decrypt.txt', decrypt_data)
+    write2b(Path('resources', '4', '123_decrypt.txt'), decrypt_data)
+
+    print("Task 7 completed")
 
 
 ''' Задание 8'''
@@ -131,10 +149,12 @@ def task7():
 
 def task8():
     e = spn1.SPN1()
-    data = read2b('d5_spn_c_all.bmp')
+    data = read2b(Path('resources', '4', 'd5_spn_c_all.bmp'))
     decrypt_data = e.decrypt_data(data, key=34523456231, rounds=4)
-    write2b('ex8_decrypt.bmp', decrypt_data)
-    write2b('ex8_50.bmp', decrypt_data[:50] + data[50:])
+    write2b(Path('resources', '4', 'ex8_decrypt.bmp'), decrypt_data)
+    write2b(Path('resources', '4', 'ex8_50.bmp'), decrypt_data[:50] + data[50:])
+
+    print("Task 8 completed")
 
 
 ''' Задание 9'''
@@ -142,52 +162,47 @@ def task8():
 
 def task9():
     e = spn1.SPN1()
-    data = read2b('d9_spn_c_cbc_all.bmp')
+    data = read2b(Path('resources', '4', 'd9_spn_c_cbc_all.bmp'))
     decrypt_data = e.decrypt_cbc(data, key=345238754631, rounds=4, initV=9)
-    write2b('ex9_decrypt.bmp', decrypt_data)
-    write2b('ex9_50.bmp', decrypt_data[:50] + data[50:])
+    write2b(Path('resources', '4', 'ex9_decrypt.bmp'), decrypt_data)
+    write2b(Path('resources', '4', 'ex9_50.bmp'), decrypt_data[:50] + data[50:])
 
-
-def task_ctr():
-    e = spn1.SPN1()
-    data = read2b('im30_spn_c_ctr_all.bmp')
-    decrypt_data = e.decrypt_ctr(data, key=3136432567, rounds=4, initV=7546)
-    write2b('exCTR_decrypt.bmp', decrypt_data)
-    write2b('exCTR_50.bmp', decrypt_data[:50] + data[50:])
-
-
-# decrypt_CFB
-
-def task_cfb():
-    e = spn1.SPN1()
-    data = read2b('im29_spn_c_cfb_all.bmp')
-    decrypt_data = e.decrypt_CFB(data, key=78384265902, rounds=4, initV=4245)
-    write2b('ex_cfb_decrypt.bmp', decrypt_data)
-    write2b('ex_cfb_50.bmp', decrypt_data[:50] + data[50:])
+    print("Task 9 completed")
 
 
 def task_ofb():
     e = spn1.SPN1()
-    data = read2b('im28_spn_c_ofb_all.bmp')
+    data = read2b(Path('resources', '4', 'im28_spn_c_ofb_all.bmp'))
     decrypt_data = e.decrypt_OFB(data, key=898387587921, rounds=4, initV=3253)
-    write2b('ex_ofb_decrypt.bmp', decrypt_data)
-    write2b('ex_ofb_50.bmp', decrypt_data[:50] + data[50:])
+    write2b(Path('resources', '4', 'ex_ofb_decrypt.bmp'), decrypt_data)
+    write2b(Path('resources', '4', 'ex_ofb_50.bmp'), decrypt_data[:50] + data[50:])
+
+    print("Task completed")
 
 
 if __name__ == '__main__':
-    print("taskA1")
     task1a()
-    print("taskB1")
     task1b()
+    task2()
+    task3a()
+    task3b()
+    task3c()
+    task4()
+    task5()
+    task6()
+    task7()
+    task8()
+    task9()
+    task_ofb()
 
-    e = spn1.SPN1()
-    # 1111 1111  1111 1111  0111 1111  1111 1111
-    # 1111_1010_1010_1110
-
-    Key = int('1111_1111_1111_1111_0111_1111_1111_1111', 2)
-    print(Key)
-    decrypt_data = e.decrypt_data(data=[int("1111_1010_1010_1110", 2)], key=Key, rounds=4)
-    print(decrypt_data)
-    txt = ''.join([chr(s) for s in decrypt_data])
-    print('decrypt_text=', txt)
-    write2b(Path('resources', '4', 'extxt.txt'), decrypt_data)
+    # e = spn1.SPN1()
+    # # 1111 1111  1111 1111  0111 1111  1111 1111
+    # # 1111_1010_1010_1110
+    #
+    # Key = int('1111_1111_1111_1111_0111_1111_1111_1111', 2)
+    # print(Key)
+    # decrypt_data = e.decrypt_data(data=[int("1111_1010_1010_1110", 2)], key=Key, rounds=4)
+    # print(decrypt_data)
+    # txt = ''.join([chr(s) for s in decrypt_data])
+    # print('decrypt_text=', txt)
+    # write2b(Path('resources', '4', 'extxt.txt'), decrypt_data)

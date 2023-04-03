@@ -1,0 +1,16 @@
+def task_ctr():
+    e = spn1.SPN1()
+    data = read2b(Path('resources', '4', 'im30_spn_c_ctr_all.bmp'))
+    decrypt_data = e.decrypt_ctr(data, key=3136432567, rounds=4, initV=7546)
+    write2b(Path('resources', '4', 'exCTR_decrypt.bmp'), decrypt_data)
+    write2b('exCTR_50.bmp', decrypt_data[:50] + data[50:])
+
+
+# decrypt_CFB
+
+def task_cfb():
+    e = spn1.SPN1()
+    data = read2b(Path('resources', '4', 'im29_spn_c_cfb_all.bmp'))
+    decrypt_data = e.decrypt_CFB(data, key=78384265902, rounds=4, initV=4245)
+    write2b(Path('resources', '4', 'ex_cfb_decrypt.bmp'), decrypt_data)
+    write2b(Path('resources', '4', 'ex_cfb_50.bmp'), decrypt_data[:50] + data[50:])

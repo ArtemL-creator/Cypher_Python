@@ -34,6 +34,7 @@ class SPN1():
 
     # x=0011    1011    1101   1100
     # y=[12, 13, 11, 3]
+    #   1100   1101   1011  0011
 
     # convert back into 16-bit state
     def mux(self, x):
@@ -44,6 +45,7 @@ class SPN1():
 
     # x = [9, 11, 4, 2]
     # y=0010    0100    1011   1001
+    #   2       4        11      9
 
     def round_keys(self, k):
         rk = []
