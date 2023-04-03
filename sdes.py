@@ -253,17 +253,18 @@ class SDes():
 if __name__ == '__main__':
     e = SDes()
 
-    print("\n\nДля задания 1")
+    print("\nДля задания 1")
     x = int("0111111101", 2)
     print(e.key_schedule(key=x))
 
-    print("\n\nДля задания 2")
+    print("\nДля задания 2")
     print(e.F(block=int("0011", 2), k=int("01011111", 2)))
 
-    print("\n\nДля задания 3")
+    print("\nДля задания 3")
     print(e.f_k(block=int("10110011", 2), SK=int("01011111", 2)))
 
-    print("\n\nДля задания 4")
+    print("\nДля задания 4")
     print()
     x = e.sdes(block=int("1110_1010", 2), k1=int("0101_1111", 2), k2=int("1111_1100", 2))
     print(x)
+

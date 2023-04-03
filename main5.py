@@ -38,9 +38,13 @@ def task_OFB():
 
     print("Task completed")
 
+def taskSDEC16(data=[143], key=int("01111_11111", 2)):
+    D = sdes.SDes()
+    print(D.decrypt_data(data, key))
+
+    print("Task completed")
 
 if __name__ == '__main__':
     task7()
-    print()
     task8()
     task_OFB()

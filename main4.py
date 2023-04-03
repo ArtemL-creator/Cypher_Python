@@ -181,28 +181,28 @@ def task_ofb():
 
 
 if __name__ == '__main__':
-    task1a()
-    task1b()
-    task2()
-    task3a()
-    task3b()
-    task3c()
-    task4()
-    task5()
-    task6()
-    task7()
-    task8()
-    task9()
-    task_ofb()
+    # task1a()
+    # task1b()
+    # task2()
+    # task3a()
+    # task3b()
+    # task3c()
+    # task4()
+    # task5()
+    # task6()
+    # task7()
+    # task8()
+    # task9()
+    # task_ofb()
 
-    # e = spn1.SPN1()
-    # # 1111 1111  1111 1111  0111 1111  1111 1111
-    # # 1111_1010_1010_1110
-    #
-    # Key = int('1111_1111_1111_1111_0111_1111_1111_1111', 2)
-    # print(Key)
-    # decrypt_data = e.decrypt_data(data=[int("1111_1010_1010_1110", 2)], key=Key, rounds=4)
-    # print(decrypt_data)
-    # txt = ''.join([chr(s) for s in decrypt_data])
-    # print('decrypt_text=', txt)
-    # write2b(Path('resources', '4', 'extxt.txt'), decrypt_data)
+    e = spn1.SPN1()
+    # 1111 1111  1111 1111  0111 1111  1111 1111
+    # 1111_1010_1010_1110
+
+    Key = int('01111_11111', 2)
+    print(Key)
+    decrypt_data = e.decrypt_data(data=[int("10001111", 2)], key=Key, rounds=4)
+    print(decrypt_data)
+    txt = ''.join([chr(s) for s in decrypt_data])
+    print('decrypt_text=', txt)
+    write2b(Path('resources', '4', 'extxt.txt'), decrypt_data)
