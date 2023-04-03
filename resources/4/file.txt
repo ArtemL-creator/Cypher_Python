@@ -14,3 +14,73 @@ def task_cfb():
     decrypt_data = e.decrypt_CFB(data, key=78384265902, rounds=4, initV=4245)
     write2b(Path('resources', '4', 'ex_cfb_decrypt.bmp'), decrypt_data)
     write2b(Path('resources', '4', 'ex_cfb_50.bmp'), decrypt_data[:50] + data[50:])
+
+------------------------------------------------------------------------------------------------------------------------
+Task 5 --------------main5
+
+def ex_cbc(filename='aa2_sdes_c_cbc_all.bmp', key=845, initV=56):
+    sys.stdout = open(os.devnull, 'w')
+    D = sdes.SDes()
+    data = read(filename)
+    decrypt_data = D.decrypt_cbc(data, key, initV)
+    file = 'exCBC.bmp'
+    write(str(Path(pp, file)), decrypt_data)
+    file = 'exCBC_50.bmp'
+    write(str(Path(pp, file)), decrypt_data[:50] + data[50:])
+    sys.stdout = sys.__stdout__
+
+
+  def ex_CFB(filename='aa4_sdes_c_cfb_all.bmp', key=455, initV=162):
+    sys.stdout = open(os.devnull, 'w')
+    D = sdes.SDes()
+    data = read(filename)
+    decrypt_data = D.decrypt_CFB(data, key, initV)
+    file = 'exCFB.bmp'
+    write(str(Path(pp, file)), decrypt_data)
+    file = 'exCFB_50.bmp'
+    write(str(Path(pp, file)), decrypt_data[:50] + data[50:])
+    sys.stdout = sys.__stdout__
+
+
+def ex_CTR(filename='im38_sdes_c_ctr_all.bmp', key=572, initV=157):
+    sys.stdout = open(os.devnull, 'w')
+    D = sdes.SDes()
+    data = read(filename)
+    decrypt_data = D.decrypt_CTR(data, key, initV)
+    file = 'CTR.bmp'
+    write(str(Path(pp, file)), decrypt_data)
+    file = 'CTR_50.bmp'
+    write(str(Path(pp, file)), decrypt_data[:50] + data[50:])
+    sys.stdout = sys.__stdout__
+
+----------------------------sdec
+
+def decrypt_CBC(self, data, key, initV):
+    k = self.key_schedule(key)
+    dd = []
+    for c in data:
+        m = self.decrypt(c, k)
+        dd.append(m ^ initV)
+        initV = c
+    return dd
+
+def decrypt_CFB(self, data, key, initV):
+    k = self.key_schedule(key)
+    cypher_data = []
+    for m in data:
+        x = self.encrypt(initV, k)
+        x = x ^ m
+        initV = m
+        cypher_data.append(x)
+    return cypher_data
+
+
+def decrypt_CTR(self, data, key, initV):
+    k = self.key_schedule(key)
+    cypher_data = []
+    for m in data:
+        x = self.encrypt(initV, k)
+        x = x ^ m
+        initV += 1
+        cypher_data.append(x)
+    return cypher_data
