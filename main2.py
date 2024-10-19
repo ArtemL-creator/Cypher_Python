@@ -31,23 +31,11 @@ def task2():
 def task3():
     ''' Задание 3'''
     data = read_write_file.read_data_1byte(Path('resources', '2', 'p1_hill_c_all.png'))
-    count_keys = 0
-    is_PNG = False
-    for a in range(256):
-        if Affine_cipher.gcd(a, 256) == 1:
-            for b in range(256):
-                count_keys += 1
-                decrypt_data = hill.decrypt_data(data[:2], a, b)
-                is_PNG = decrypt_data[0] == 0x89 and decrypt_data[1] == 0x50
-                if is_PNG:
-                    print('k =', count_keys)
-                    print('a =', a)
-                    print('b =', b)
-                    decrypt_data = hill.decrypt_data(data, a, b)
-                    read_write_file.write_data_1byte(Path('resources', '2', 'p1_hill_c_all_decrypt.png'), decrypt_data)
-                    break
-        if is_PNG:
-            break
+    m = [[137, 78], [80, 71]]
+    c = [[data[0], data[2]], [data[1], data[3]]]
+    k = np.dot(c, hill.inverted_k(m, 256)) % 256
+    decrypt_data = hill.decrypt_data(data, hill.inverted_k(k, 256), 256)
+    read_write_file.write_data_1byte(Path('resources', '2', 'p1_hill_c_all_decrypt.png'), decrypt_data)
     print("Task 3 completed")
 
 
