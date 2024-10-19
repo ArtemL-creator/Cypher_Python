@@ -1,7 +1,7 @@
 from pathlib import Path
 
-import Affine_cipher
 import numpy as np
+
 import hill
 import read_write_file
 
