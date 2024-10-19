@@ -13,7 +13,7 @@ def task1():
     k_ = hill.inverted_k(k, 256)
     decrypt_data = hill.decrypt_data(data, k_, 256)
     read_write_file.write_data_1byte(Path('resources', '2', 'im3_hill_c_all_decrypt.bmp'), decrypt_data)
-    print("Task 2 completed")
+    print("Task 1 completed")
 
 
 def task2():
