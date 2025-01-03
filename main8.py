@@ -42,6 +42,10 @@ def multiplicative_order(g, n):
     return m
 
 
+def inverse_el(a, p):
+    return a ** (p - 2) % p
+
+
 if __name__ == '__main__':
     ''' Задание 2'''
     print(f'euler_fun(n):\np = 29, res = {euler_fun(29)}\np = 701, res = {euler_fun(701)} \n')
@@ -70,3 +74,11 @@ if __name__ == '__main__':
     print(f'Z29 = {primitive_roots(29)}')
     print(f'Z18 = {primitive_roots(18)}')
     print('\n')
+
+    ''' Задание 7'''
+    print(f'a = 7814, Z = 17449 => a^(-1) = {inverse_el(7814, 17449)}')
+    print('\n')
+
+    ''' Задание 8'''
+    print(f'a = 5, b = 12 => {5 ** euler_fun(12) % 12}')
+    print(f'a = 2, b = 21 => {2 ** euler_fun(21) % 21}')
