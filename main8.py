@@ -43,7 +43,7 @@ def multiplicative_order(g, n):
 
 
 def inverse_el(a, p):
-    return a ** (p - 2) % p
+    return pow(a, p - 2, p)
 
 
 if __name__ == '__main__':
