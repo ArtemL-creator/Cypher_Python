@@ -1,6 +1,9 @@
+import math
+
 import Acrypt as acrypt
-from sympy import isprime
+# from sympy import isprime
 import time
+import random
 
 if __name__ == '__main__':
     ''' Задание 2'''
@@ -39,10 +42,11 @@ if __name__ == '__main__':
     ''' Задание 8'''
     print(f'a = 5, b = 12 => {5 ** acrypt.euler_fun(12) % 12}')
     print(f'a = 2, b = 21 => {2 ** acrypt.euler_fun(21) % 21}')
+    print('\n')
 
     ''' Задание 2.1'''
     p = acrypt.find_p_2q_plus_1(12)
-    print('find p = {}, is prime (p-1)/2: {}'.format(p, isprime((p - 1) // 2)))
+    print('find p = {}, is prime (p-1)/2: {}'.format(p, acrypt.is_prime((p - 1) // 2)))
 
     ''' Задание 2.2'''
     g = acrypt.find_g(p)
@@ -63,3 +67,51 @@ if __name__ == '__main__':
     g = acrypt.find_first_primitive_root(p)
     t1 = time.perf_counter()
     print(f'p = {p}, g = {g}, time = {t1 - t0}')
+    print('\n')
+
+    print(f'Задание 2.4')
+    ''' Задание 2.4'''
+    t0 = time.perf_counter()
+    p, g = acrypt.find_p_g(17)
+    t1 = time.perf_counter()
+    print(f'p = {p}, g = {g}, time = {t1 - t0}')
+    print('\n')
+
+    print(f'Задание 2.5')
+    ''' Задание 2.5'''
+    for_5 = []
+
+    for i in range(2, 100):
+        if acrypt.is_prime(i):
+            for_5.append(i)
+
+    print(for_5)
+    for p_i in for_5:
+        if acrypt.find_g(p_i) == 2:
+            print(f'p = {p_i}')
+    print('\n')
+
+    ''' Задание 2.6'''
+    print(f'Задание 2.6')
+    for _ in range(10):
+        while True:
+            n = random.randrange(13000, 14000)
+            if acrypt.is_prime(n):
+                print(n)
+                break
+    print('\n')
+
+    print(f'p = 1000000000061 : is prime? -> {acrypt.is_prime(1000000000061)}')
+    print(f'p = 1000000000063 : is prime? -> {acrypt.is_prime(1000000000063)}')
+    # print(f'p = 1000000000063 : is prime? -> {acrypt.is_prime(1000000000062)}')
+    print('\n')
+
+    thousand_one = 1001
+    n = math.factorial(thousand_one)
+    for i in range(2, thousand_one + 1):
+        print(f'1001! + {i} : {acrypt.is_prime(n + i)}')
+
+    ''' Задание 2.7'''
+    print(f'Задание 2.7')
+    n = acrypt.generate_large_prime(32)
+    print('{} = {} содержит {} бит'.format(n, bin(n)[2:], len(bin(n)[2:])))
