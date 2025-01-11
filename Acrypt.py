@@ -46,6 +46,21 @@ def primitive_roots(n):
     return res
 
 
+def find_factors(n):
+    """Находит все простые делители числа n."""
+    factors = set()
+    d = 2
+    while d * d <= n:
+        if n % d == 0:
+            factors.add(d)
+            while n % d == 0:
+                n //= d
+        d += 1
+    if n > 1:
+        factors.add(n)
+    return factors
+
+
 def multiplicative_order(g, n):
     m = 1
     while (g ** m) % n != 1:
@@ -79,11 +94,10 @@ def find_p_2q_plus_1(bitfield_width):
 ''' Задание 2.2'''
 
 
-def find_g(q2_plus_1):
-    p = q2_plus_1
-    q = (q2_plus_1 - 1) // 2
+def find_g(p):
+    q = (p - 1) // 2
     for g in range(2, p - 1):
-        if ((g ** q) % p != 1):
+        if pow(g, q, p) != 1:
             return g
 
 
@@ -91,11 +105,14 @@ def find_first_primitive_root(p):
     if p == 2:
         return 1
 
-    arr_p = primitive_roots(p)
+    phi_p = p - 1
+    factors = find_factors(phi_p)
 
     for g in range(2, p):
-        for i in range(len(arr_p)):
-            if (g ** ((p - 1) // arr_p[i])) % p == 1:
+        is_primitive = True
+        for q in factors:
+            if pow(g, phi_p // q, p) == 1:
+                is_primitive = False
                 break
-            if i == len(arr_p) - 1:
-                return g
+        if is_primitive:
+            return g

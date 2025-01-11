@@ -49,12 +49,15 @@ if __name__ == '__main__':
     print('find g = {}'.format(g))
 
     ''' Задание 2.3'''
-    t0 = time.perf_counter()
     p = acrypt.find_p_2q_plus_1(8)
     # p = 253679
+
+    t0 = time.perf_counter()
     g = acrypt.find_g(p)
     t1 = time.perf_counter()
     print(f'p = {p}, g = {g}, time = {t1 - t0}')
+
+    # print(acrypt.find_factors(77))
 
     t0 = time.perf_counter()
     g = acrypt.find_first_primitive_root(p)
