@@ -1,9 +1,13 @@
-import math
-
 import Acrypt as acrypt
-# from sympy import isprime
+import math
 import time
 import random
+
+from pathlib import Path
+
+import read_write_file
+from read_write_file import read_data_1byte as read
+
 
 if __name__ == '__main__':
     ''' Задание 2'''
@@ -110,8 +114,51 @@ if __name__ == '__main__':
     n = math.factorial(thousand_one)
     for i in range(2, thousand_one + 1):
         print(f'1001! + {i} : {acrypt.is_prime(n + i)}')
+    print('\n')
 
     ''' Задание 2.7'''
     print(f'Задание 2.7')
     n = acrypt.generate_large_prime(32)
     print('{} = {} содержит {} бит'.format(n, bin(n)[2:], len(bin(n)[2:])))
+    print('\n')
+
+    ''' Задание 3.1'''
+    print(f'Задание 3.1')
+    num = acrypt.txt2IntNums(message='Hello world!', block_size=12)
+    print('message is a number: {}'.format(num))
+
+    num = acrypt.txt2IntNums(message='Hello world!', block_size=7)
+    print('message is a number: {}'.format(num))
+
+    num = acrypt.txt2IntNums(message='Hello world!', block_size=4)
+    print('message is a number: {}'.format(num))
+    print('\n')
+
+    ''' Задание 3.2'''
+    print(f'Задание 3.2')
+    msg = acrypt.IntNums2txt([10334410032606748633331426632], message_length=12, block_size=12)
+    print('message is {}'.format(msg))
+    msg = acrypt.IntNums2txt([33531185161069896, 143418749551], message_length=12, block_size=7)
+    print('message is {}'.format(msg))
+    print('\n')
+
+    ''' Задание 3.3'''
+    print(f'Задание 3.3')
+    data = [72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33]
+    num = acrypt.dat2IntNums(data, block_size=12)
+    print('message is a number: {}'.format(num))
+    print('\n')
+
+    msg = acrypt.IntNums2dat(num, message_length=12, block_size=12)
+    print('message is {}'.format(msg))
+    print('\n')
+
+    ''' Задание 3.4'''
+    print(f'Задание 3.4')
+    data = read_write_file.read_data_1byte(Path('resources', '8', 'text.txt'))
+    print('message is : {}'.format(data))
+    num = acrypt.dat2IntNums(data, block_size=3)
+    print('message is a number: {}'.format(num))
+    decrypt_data = acrypt.IntNums2dat(num, len(data), 3)
+    print("decrypt_data = ", decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '8', 'decrypt_text.txt'), decrypt_data)

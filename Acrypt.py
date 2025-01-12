@@ -1,5 +1,6 @@
 import Affine_cipher as ac
 import random
+
 # from sympy import isprime
 
 ''' Задание 1'''
@@ -184,7 +185,10 @@ def is_prime(n):
     # If all else fails, call rabin_miller() to determine if n is a prime.
     return rabin_miller(n)
 
+
 ''' Задание 2.7'''
+
+
 def generate_large_prime(bitfield_width):
     while True:
         candidate = random.getrandbits(bitfield_width)
@@ -195,3 +199,65 @@ def generate_large_prime(bitfield_width):
         if is_prime(candidate):
             return candidate
 
+
+''' Задание 3.1'''
+
+
+def txt2IntNums(message, block_size):
+    # Разбиваем сообщение на блоки
+    blocks = [message[i:i + block_size] for i in range(0, len(message), block_size)]
+
+    # Преобразуем каждый блок в число
+    result = []
+    for block in blocks:
+        block_num = 0
+        for i, char in enumerate(block):
+            block_num += ord(char) * (256 ** i)
+        result.append(block_num)
+
+    return result
+
+
+''' Задание 3.2'''
+
+
+def IntNums2txt(block_ints, message_length, block_size):
+    result_message = []
+
+    for block_int in block_ints:
+        block_message = []
+        for _ in range(block_size):
+            char = chr(block_int % 256)
+            block_message.append(char)
+            block_int //= 256
+
+        result_message.extend(block_message)
+
+    return ''.join(result_message)[:message_length]
+
+
+def dat2IntNums(data, block_size):
+    blocks = [data[i:i + block_size] for i in range(0, len(data), block_size)]
+
+    result = []
+    for block in blocks:
+        block_num = 0
+        for i, value in enumerate(block):
+            block_num += value * (256 ** i)
+        result.append(block_num)
+
+    return result
+
+def IntNums2dat(block_ints, message_length, block_size):
+    result_data = []
+
+    for block_int in block_ints:
+        block_data = []
+        for _ in range(block_size):
+            value = block_int % 256
+            block_data.append(value)
+            block_int //= 256
+
+        result_data.extend(block_data)
+
+    return result_data[:message_length]
