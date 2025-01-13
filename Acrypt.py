@@ -1,7 +1,7 @@
+import math
+
 import Affine_cipher as ac
 import random
-
-# from sympy import isprime
 
 ''' Задание 1'''
 
@@ -248,6 +248,7 @@ def dat2IntNums(data, block_size):
 
     return result
 
+
 def IntNums2dat(block_ints, message_length, block_size):
     result_data = []
 
@@ -261,3 +262,45 @@ def IntNums2dat(block_ints, message_length, block_size):
         result_data.extend(block_data)
 
     return result_data[:message_length]
+
+
+# A = pub_key
+def elgamal_encrypt_element(pub_key, g, p, m):
+    k = random.randint(1, p - 1)
+    c1 = pow(g, k, p)
+    c2 = (m * pow(pub_key, k, p)) % p
+    return c1, c2
+
+
+def elgamal_decrypt_element(a, p, c1, c2):
+    inv_c1_pow_a = inverse_el(pow(c1, a, p), p)
+    return (c2 * inv_c1_pow_a) % p
+
+
+def elgamal_encrypt(nums, priv_key):
+    max_el = max(nums)
+    bitfield_width = math.floor(math.log2(max_el)) + 2
+    p, g = find_p_g(bitfield_width)
+    pub_key = pow(g, priv_key, p)
+
+    encrypt_nums = []
+    for element in nums:
+        encrypt_nums.append(elgamal_encrypt_element(pub_key, g, p, element))
+
+    return pub_key, p, encrypt_nums
+
+
+def elgamal_decrypt(encrypt_nums, a, p):
+    decrypt_nums = []
+    for element in encrypt_nums:
+        decrypt_nums.append(elgamal_decrypt_element(a, p, element[0], element[1]))
+
+    return decrypt_nums
+
+
+def elgamal_decrypt_without2arrays(encrypt_nums, a, p):
+    decrypt_nums = []
+    for i in range(0, len(encrypt_nums), 2):
+        decrypt_nums.append(elgamal_decrypt_element(a, p, encrypt_nums[i], encrypt_nums[i + 1]))
+
+    return decrypt_nums

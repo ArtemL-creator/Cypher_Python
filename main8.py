@@ -2,12 +2,17 @@ import Acrypt as acrypt
 import math
 import time
 import random
+from sympy import discrete_log
 
 from pathlib import Path
 
 import read_write_file
-from read_write_file import read_data_1byte as read
 
+def parse_encrypted_data(raw_bytes):
+    # Преобразуем байты в строку
+    raw_string = ''.join(chr(b) for b in raw_bytes)
+    # Разделяем строку на числа
+    return list(map(int, raw_string.split()))
 
 if __name__ == '__main__':
     ''' Задание 2'''
@@ -157,8 +162,113 @@ if __name__ == '__main__':
     print(f'Задание 3.4')
     data = read_write_file.read_data_1byte(Path('resources', '8', 'text.txt'))
     print('message is : {}'.format(data))
-    num = acrypt.dat2IntNums(data, block_size=3)
-    print('message is a number: {}'.format(num))
-    decrypt_data = acrypt.IntNums2dat(num, len(data), 3)
+    nums = acrypt.dat2IntNums(data, block_size=3)
+    print('message is a number: {}'.format(nums))
+    decrypt_data = acrypt.IntNums2dat(nums, len(data), 3)
     print("decrypt_data = ", decrypt_data)
-    read_write_file.write_data_1byte(Path('resources', '8', 'decrypt_text.txt'), decrypt_data)
+    read_write_file.write_data_1byte(Path('resources', '8', '3.4_decrypt_text.txt'), decrypt_data)
+
+    m = 331
+    p = 467
+    g = 2
+    a = 153
+    A = pow(g, a, p)
+    print(f'Pub key = {A}')
+    c1, c2 = acrypt.elgamal_encrypt_element(A, g, p, m)
+    print(f'c1 = {c1}, c2 = {c2}')
+
+    m_ = acrypt.elgamal_decrypt_element(a, p, c1, c2)
+    print(f'm_ = {m_}')
+
+    ''' Задание 4.1'''
+    print(f'Задание 4.1')
+    data = read_write_file.read_data_1byte(Path('resources', '8', 'text.txt'))
+    length = len(data)
+    block_size = 3
+    print('message is : {}'.format(data))
+    nums = acrypt.dat2IntNums(data, block_size)
+    priv_key = 4356
+    pub_key, p, encrypt_nums = acrypt.elgamal_encrypt(nums, priv_key)
+    read_write_file.write_numbers(Path('resources', '8', 'encrypt_file.txt'), encrypt_nums)
+
+    decrypt_data = acrypt.elgamal_decrypt(encrypt_nums, priv_key, p)
+    print(f'nums = {nums}')
+    print(f'decrypt data = {decrypt_data}')
+    recovered_data = acrypt.IntNums2dat(decrypt_data, length, block_size)
+    read_write_file.write_data_1byte(Path('resources', '8', 'decrypt_file.txt'), recovered_data)
+    print("recovered data = ", recovered_data)
+    print('\n')
+
+    ''' Задание 4.2'''
+    print(f'Задание 4.2')
+    p = 9887455967
+    # g = 5
+    # pub_key = 3359661584
+    priv_key = 543
+    block_size = 4
+    message_length = 24776
+
+    raw_encrypted_data = read_write_file.read_data_1byte(Path('resources', '8', 'b4_ElG_c.png'))
+    encrypt_nums = parse_encrypted_data(raw_encrypted_data)
+
+    decrypted_nums = acrypt.elgamal_decrypt_without2arrays(encrypt_nums, priv_key, p)
+    recovered_data = acrypt.IntNums2dat(decrypted_nums, message_length, block_size)
+
+    output_path = Path('resources', '8', 'dec_b4_ElG_c.png')
+    read_write_file.write_data_1byte(output_path, recovered_data)
+    print(f"Файл успешно расшифрован и сохранён в {output_path}")
+    print('\n')
+
+    ''' Задание 4.3'''
+    print(f'Задание 4.3')
+    p = pow(2, 31) - 1
+    g = 7
+    pub_key = 833287206
+    c1 = 1457850878
+    c2 = 2110264777
+
+    priv_key = discrete_log(p, pub_key, g)
+    print(f'a = {priv_key}')
+
+    m = acrypt.elgamal_decrypt_element(priv_key, p, c1, c2)
+    print(f'm = {m}')
+    print('\n')
+
+    ''' Задание 4.4'''
+    print(f'Задание 4.4')
+    p = 42872085028600815685899302367146749920403071157571857811961258220079
+    # g = 17
+    priv_key = 7608566734640113926049241095953347821765109080939503038867986728182
+    block_size = 28
+    message_length = 28
+    c1 = 9993855169559627290785990688705841570114656880026382687658675476757
+    c2 = 21825170162147362019183963692601304583442479734446937458746973254460
+
+    decrypt_data = acrypt.elgamal_decrypt_element(priv_key, p, c1, c2)
+    print(f'decrypt data = {decrypt_data}')
+    recovered_bytes = bytes(acrypt.IntNums2dat([decrypt_data], message_length, block_size))
+    recovered_string = recovered_bytes.decode('utf-8')
+    print("recovered data = ", recovered_string)
+    print('\n')
+
+    ''' Задание 4.5'''
+    print(f'Задание 4.5')
+    p = 20598563
+    g = 2
+    pub_key = 12762739
+    block_size = 3
+    message_length = 1849
+
+    priv_key = discrete_log(p, pub_key, g)
+    print(f'a = {priv_key}')
+
+    raw_encrypted_data = read_write_file.read_data_1byte(Path('resources', '8', 't24_ElG_c.txt'))
+    encrypt_nums = parse_encrypted_data(raw_encrypted_data)
+
+    decrypted_nums = acrypt.elgamal_decrypt_without2arrays(encrypt_nums, priv_key, p)
+    recovered_data = acrypt.IntNums2dat(decrypted_nums, message_length, block_size)
+
+    output_path = Path('resources', '8', 'dec_t24_ElG_c.txt')
+    read_write_file.write_data_1byte(output_path, recovered_data)
+    print(f"Файл успешно расшифрован и сохранён в {output_path}")
+    print('\n')
