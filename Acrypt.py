@@ -1,5 +1,4 @@
 import math
-
 import Affine_cipher as ac
 import random
 
@@ -69,8 +68,24 @@ def multiplicative_order(g, n):
     return m
 
 
-def inverse_el(a, p):
+def inverse_el_for_prime(a, p):
     return pow(a, p - 2, p)
+
+
+def extended_gcd(a, b):
+    if b == 0:
+        return a, 1, 0
+    gcd, x1, y1 = extended_gcd(b, a % b)
+    x = y1
+    y = x1 - (a // b) * y1
+    return gcd, x, y
+
+
+def inverse_el(a, m):
+    gcd, x = extended_gcd(a, m)[:2]
+    if gcd != 1:
+        raise ValueError(f"{a} has no modular inverse modulo {m}")
+    return x % m
 
 
 ''' Задание 2.1'''
@@ -264,6 +279,63 @@ def IntNums2dat(block_ints, message_length, block_size):
     return result_data[:message_length]
 
 
+''' Задание 4.2'''
+
+
+def crt(A, m1mk):
+    ma = []
+    for m_i in m1mk:
+        ma.append(A % m_i)
+    return ma
+
+
+''' Задание 4.3'''
+
+
+def crt_inv(ma, m1mk):
+    M = math.prod(m1mk)
+    M_i = []
+    for m_i in m1mk:
+        M_i.append(M // m_i)
+
+    A = 0
+    for i in range(len(ma)):
+        A += ma[i] * M_i[i] * inverse_el(M_i[i], m1mk[i])
+
+    return A % M
+
+
+''' Задание 4.6'''
+
+
+def dlog(g, pub_key, p):
+    priv_key = 0
+    while pub_key != pow(g, priv_key, p):
+        priv_key += 1
+        if priv_key == p:
+            return
+
+    return priv_key
+
+
+''' Задание 4.9'''
+
+
+def shanks_method(g, pub_key, p):
+    q = math.ceil(math.sqrt(p))
+    g_inv_q = inverse_el_for_prime(pow(g, q), p)
+    L = []
+    for r in range(q):
+        L.append(pow(g, r, p))
+
+    for m in range(q):
+        y = (pub_key * pow(g_inv_q, m, p)) % p
+        if y in L:
+            r = L.index(y)
+            return m * q + r
+
+
+
 # A = pub_key
 def elgamal_encrypt_element(pub_key, g, p, m):
     k = random.randint(1, p - 1)
@@ -273,7 +345,7 @@ def elgamal_encrypt_element(pub_key, g, p, m):
 
 
 def elgamal_decrypt_element(a, p, c1, c2):
-    inv_c1_pow_a = inverse_el(pow(c1, a, p), p)
+    inv_c1_pow_a = inverse_el_for_prime(pow(c1, a, p), p)
     return (c2 * inv_c1_pow_a) % p
 
 

@@ -8,11 +8,13 @@ from pathlib import Path
 
 import read_write_file
 
+
 def parse_encrypted_data(raw_bytes):
     # Преобразуем байты в строку
     raw_string = ''.join(chr(b) for b in raw_bytes)
     # Разделяем строку на числа
     return list(map(int, raw_string.split()))
+
 
 if __name__ == '__main__':
     ''' Задание 2'''
@@ -45,7 +47,7 @@ if __name__ == '__main__':
     print('\n')
 
     ''' Задание 7'''
-    print(f'a = 7814, Z = 17449 => a^(-1) = {acrypt.inverse_el(7814, 17449)}')
+    print(f'a = 7814, Z = 17449 => a^(-1) = {acrypt.inverse_el_for_prime(7814, 17449)}')
     print('\n')
 
     ''' Задание 8'''
@@ -179,9 +181,72 @@ if __name__ == '__main__':
 
     m_ = acrypt.elgamal_decrypt_element(a, p, c1, c2)
     print(f'm_ = {m_}')
+    print('\n')
 
-    ''' Задание 4.1'''
-    print(f'Задание 4.1')
+    ''' Задание 4.2'''
+    print(f'Задание 4.2')
+    m1mk = [89, 97]
+    ma = acrypt.crt(2345, m1mk)
+    print(f'ma = {ma}')
+    print('\n')
+
+    ''' Задание 4.3'''
+    print(f'Задание 4.3')
+    A = acrypt.crt_inv(ma, m1mk)
+    print(f'A = {A}')
+    print('\n')
+
+    ''' Задание 4.4'''
+    print(f'Задание 4.4')
+    m1mk = [5, 8, 19]
+    ma = [1, 2, 3]
+    A = acrypt.crt_inv(ma, m1mk)
+    print(f'A = {A}')
+    print('\n')
+
+    ''' Задание 4.5'''
+    print(f'Задание 4.5')
+    m1mk = [5, 9]
+    ma = [3, 7]
+    A = acrypt.crt_inv(ma, m1mk)
+    print(f'A = {A}')
+    print('\n')
+
+    ''' Задание 4.7'''
+    print(f'Задание 4.7')
+    p = 901679
+    g = 7
+    pub_key = 386434
+    t0 = time.perf_counter()
+    priv_key = acrypt.dlog(g, pub_key, p)
+    t1 = time.perf_counter()
+    print(f'priv key = {priv_key}, time: {t1 - t0}')
+    print(f'pub key -> {pow(g, priv_key, p)}')
+    print('\n')
+
+    ''' Задание 4.9'''
+    print(f'Задание 4.9')
+    p = 901679
+    g = 7
+    pub_key = 386434
+    t0 = time.perf_counter()
+    priv_key = acrypt.dlog(g, pub_key, p)
+    t1 = time.perf_counter()
+    print(f'Shanks method: priv key = {priv_key}, time: {t1 - t0}')
+    print(f'pub key -> {pow(g, priv_key, p)}')
+    print('\n')
+
+    ''' Задание 4.8'''
+    print(f'Задание 4.8')
+    p, g = acrypt.find_p_g(22)
+    t0 = time.perf_counter()
+    a = pow(g, p - 2, p)
+    t1 = time.perf_counter()
+    print('{}^{} mod {}={} за время {}'.format(g, p - 2, p, a, t1 - t0))
+    print('\n')
+
+    ''' Задание 5.1'''
+    print(f'Задание 5.1')
     data = read_write_file.read_data_1byte(Path('resources', '8', 'text.txt'))
     length = len(data)
     block_size = 3
@@ -199,8 +264,8 @@ if __name__ == '__main__':
     print("recovered data = ", recovered_data)
     print('\n')
 
-    ''' Задание 4.2'''
-    print(f'Задание 4.2')
+    ''' Задание 5.2'''
+    print(f'Задание 5.2')
     p = 9887455967
     # g = 5
     # pub_key = 3359661584
@@ -219,8 +284,8 @@ if __name__ == '__main__':
     print(f"Файл успешно расшифрован и сохранён в {output_path}")
     print('\n')
 
-    ''' Задание 4.3'''
-    print(f'Задание 4.3')
+    ''' Задание 5.3'''
+    print(f'Задание 5.3')
     p = pow(2, 31) - 1
     g = 7
     pub_key = 833287206
@@ -234,8 +299,8 @@ if __name__ == '__main__':
     print(f'm = {m}')
     print('\n')
 
-    ''' Задание 4.4'''
-    print(f'Задание 4.4')
+    ''' Задание 5.4'''
+    print(f'Задание 5.4')
     p = 42872085028600815685899302367146749920403071157571857811961258220079
     # g = 17
     priv_key = 7608566734640113926049241095953347821765109080939503038867986728182
@@ -251,8 +316,8 @@ if __name__ == '__main__':
     print("recovered data = ", recovered_string)
     print('\n')
 
-    ''' Задание 4.5'''
-    print(f'Задание 4.5')
+    ''' Задание 5.5'''
+    print(f'Задание 5.5')
     p = 20598563
     g = 2
     pub_key = 12762739
