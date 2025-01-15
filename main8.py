@@ -245,6 +245,116 @@ if __name__ == '__main__':
     print('{}^{} mod {}={} за время {}'.format(g, p - 2, p, a, t1 - t0))
     print('\n')
 
+    ''' Задание 4.10'''
+    print(f'Задание 4.10')
+    print(f'Протокол Диффи-Хеллмана')
+    p, g = acrypt.find_p_g(150)
+    print(
+        f'Алиса и Боб договорились использовать 150 битовое простое число p = {p}\nи первообразный корень мультипликативной группы по модулю p -> g = {g} ')
+    a = random.randint(2, p - 2)
+    print(f'Алиса выбирает a = {a}')
+    b = random.randint(2, p - 2)
+    print(f'Боб выбирает b = {b}')
+    A = pow(g, a, p)
+    print(f'Алиса вычисляет A = {A} и передаёт Бобу')
+    B = pow(g, b, p)
+    print(f'Боб вычисляет B = {B} и передаёт Алисе')
+    k1 = pow(B, a, p)
+    print(f'Алиса вычисляет k = {k1}')
+    k2 = pow(A, b, p)
+    print(f'Боб вычисляет k = {k2}')
+    print('\n')
+
+    ''' Задание 4.11'''
+    print(f'Задание 4.11')
+    print(f'Протокол шифра Шамира')
+    p = acrypt.find_p_2q_plus_1(50)
+    fi_p = p - 1
+    print(f'Алиса и Боб договорились использовать 50 битовое простое число p = {p}')
+
+    while True:
+        c_A = random.randint(2, fi_p - 1)
+        if acrypt.extended_gcd(c_A, fi_p)[0] == 1:
+            break
+    d_A = acrypt.inverse_el(c_A, fi_p)
+    print(f'Алиса выбирает \tc_A = {c_A}, d_A = {d_A}')
+    # print(f'(c_A * d_A) % fi_p = {(c_A * d_A) % fi_p}')
+
+    while True:
+        c_B = random.randint(2, fi_p - 1)
+        if acrypt.extended_gcd(c_B, fi_p)[0] == 1:
+            break
+    d_B = acrypt.inverse_el(c_B, fi_p)
+    print(f'Боб выбирает \t\tc_B = {c_B}, d_B = {d_B}')
+    # print(f'(c_B * d_B) % fi_p = {(c_B * d_B) % fi_p}')
+
+    m = 15
+    print(f'Алиса хочет передать m = {m}')
+    x = pow(m, c_A, p)
+    print(f'Алиса вычисляет x = {x} и передаёт Бобу')
+
+    y = pow(x, c_B, p)
+    print(f'Боб вычисляет y = {y} и передаёт Алисе')
+
+    z = pow(y, d_A, p)
+    print(f'Алиса вычисляет z = {z} и передаёт Бобу')
+
+    m_ = pow(z, d_B, p)
+    print(f'Боб вычисляет m_ = {m_}')
+    print('\n')
+
+######################################################
+    ''' Задание 4.12'''
+    print(f'Задание 4.12')
+    print(f'Протокол шифра Шамира')
+    ms = 'Фёдор Фёдорович Фёдоров'
+    ms_bytes = ms.encode('utf-8')
+    # ms = 'Arbiten!!!!!'
+    length_ms = len(ms_bytes)
+    m_arr = acrypt.dat2IntNums(ms_bytes, length_ms)
+    m = m_arr[0]
+    print(f'Передаваемое сообщение: {ms}, \nm = {m}')
+
+    bitfield_width = math.floor(math.log2(m)) + 2
+    p = acrypt.find_p_2q_plus_1(bitfield_width)
+    fi_p = p - 1
+    print(f'Алиса и Боб договорились использовать {bitfield_width} битовое простое число p = {p}')
+
+    while True:
+        c_A = random.randint(2, fi_p - 1)
+        if acrypt.extended_gcd(c_A, fi_p)[0] == 1:
+            break
+    d_A = acrypt.inverse_el(c_A, fi_p)
+    print(f'Алиса выбирает \tc_A = {c_A}, d_A = {d_A}')
+    # print(f'(c_A * d_A) % fi_p = {(c_A * d_A) % fi_p}')
+
+    while True:
+        c_B = random.randint(2, fi_p - 1)
+        if acrypt.extended_gcd(c_B, fi_p)[0] == 1:
+            break
+    d_B = acrypt.inverse_el(c_B, fi_p)
+    print(f'Боб выбирает \t\tc_B = {c_B}, d_B = {d_B}')
+    # print(f'(c_B * d_B) % fi_p = {(c_B * d_B) % fi_p}')
+
+    print(f'Алиса хочет передать m = {m}')
+    x = pow(m, c_A, p)
+    print(f'Алиса вычисляет x = {x} и передаёт Бобу')
+
+    y = pow(x, c_B, p)
+    print(f'Боб вычисляет y = {y} и передаёт Алисе')
+
+    z = pow(y, d_A, p)
+    print(f'Алиса вычисляет z = {z} и передаёт Бобу')
+
+    m_ = pow(z, d_B, p)
+    print(f'Боб вычисляет m_ = {m_}')
+
+    recovered_bytes = bytes(acrypt.IntNums2dat([m_], length_ms, length_ms))
+    print(acrypt.IntNums2dat([m_], length_ms, length_ms))
+    ms_ = recovered_bytes.decode('utf-8')
+    print(f'Боб расшифровал сообщение: {ms_}')
+    print('\n')
+
     ''' Задание 5.1'''
     print(f'Задание 5.1')
     data = read_write_file.read_data_1byte(Path('resources', '8', 'text.txt'))

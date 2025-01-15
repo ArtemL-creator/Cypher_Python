@@ -1,4 +1,7 @@
 import math
+
+import sympy
+
 import Affine_cipher as ac
 import random
 
@@ -99,7 +102,8 @@ def find_p_2q_plus_1(bitfield_width):
     while True:
         p = random.randint(lower_bound, upper_bound)
 
-        if is_prime(p):
+        # if is_prime(p):
+        if sympy.isprime(p):
             q = (p - 1) // 2
 
             # Проверяем, что q - простое число
@@ -155,7 +159,8 @@ def rabin_miller(n):
         # to count how many times we halve s)
         q = q // 2
         k += 1
-    t = 5
+    # t = 5
+    t = 15
     for trials in range(t):  # try to falsify num's primality 5 times
         a = random.randrange(2, n - 1)
         v = pow(a, q, n)
