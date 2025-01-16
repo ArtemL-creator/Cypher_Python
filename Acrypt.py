@@ -107,7 +107,8 @@ def find_p_2q_plus_1(bitfield_width):
             q = (p - 1) // 2
 
             # Проверяем, что q - простое число
-            if is_prime(q):
+            # if is_prime(q):
+            if sympy.isprime(q):
                 return p
 
 
@@ -160,7 +161,8 @@ def rabin_miller(n):
         q = q // 2
         k += 1
     # t = 5
-    t = 15
+    # t = 15
+    t = 500
     for trials in range(t):  # try to falsify num's primality 5 times
         a = random.randrange(2, n - 1)
         v = pow(a, q, n)
@@ -284,6 +286,33 @@ def IntNums2dat(block_ints, message_length, block_size):
     return result_data[:message_length]
 
 
+''' Задание 5.9'''
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+
+def decode_block(value):
+    a = value // (26 ** 2)
+    b = (value % (26 ** 2)) // 26
+    c = value % 26
+    return alphabet[a] + alphabet[b] + alphabet[c]
+
+
+def IntNums2dat26(block_ints, message_length, block_size):
+    result_data = []
+
+    for block_int in block_ints:
+        block_data = []
+        for _ in range(block_size):
+            value = block_int % 26
+            block_data.append(value)
+            block_int //= 26
+
+        result_data.extend(block_data)
+
+    return result_data[:message_length]
+
+
 ''' Задание 4.2'''
 
 
@@ -340,7 +369,6 @@ def shanks_method(g, pub_key, p):
             return m * q + r
 
 
-
 # A = pub_key
 def elgamal_encrypt_element(pub_key, g, p, m):
     k = random.randint(1, p - 1)
@@ -379,5 +407,62 @@ def elgamal_decrypt_without2arrays(encrypt_nums, a, p):
     decrypt_nums = []
     for i in range(0, len(encrypt_nums), 2):
         decrypt_nums.append(elgamal_decrypt_element(a, p, encrypt_nums[i], encrypt_nums[i + 1]))
+
+    return decrypt_nums
+
+
+def find_p_q_for_rsa(max_el, bitfield_width_p, bitfield_width_q):
+    p = find_p_2q_plus_1(bitfield_width_p)
+    q = find_p_2q_plus_1(bitfield_width_q)
+    while p == q:
+        q = find_p_2q_plus_1(bitfield_width_q)
+
+    if p * q < max_el:
+        find_p_q_for_rsa(max_el, bitfield_width_p, bitfield_width_q)
+
+    return p, q
+
+
+def rsa_choice_of_parameters(nums):
+    max_el = max(nums) if max(nums) > 25 else 25
+    bitfield_width_n = math.floor(math.log2(max_el)) + 4
+    bitfield_width_p = bitfield_width_n // 2
+    bitfield_width_q = bitfield_width_n - bitfield_width_p
+    bitfield_width_n = bitfield_width_p + bitfield_width_q
+    p, q = find_p_q_for_rsa(max_el, bitfield_width_p, bitfield_width_q)
+    while p == q:
+        q = find_p_2q_plus_1(bitfield_width_q)
+
+    phi_n = (p - 1) * (q - 1)
+    while True:
+        pub_key = find_p_2q_plus_1(random.randint(2, bitfield_width_n))
+        if p % pub_key != 1 and q % pub_key != 1 and extended_gcd(pub_key, phi_n):
+            break
+
+    priv_key = inverse_el(pub_key, phi_n)
+
+    return pub_key, p * q, priv_key
+
+
+def rsa_encrypt_element(m, pub_key, n):
+    return pow(m, pub_key, n)
+
+
+def rsa_decrypt_element(c, priv_key, n):
+    return pow(c, priv_key, n)
+
+
+def rsa_encrypt(nums, pub_key, n):
+    encrypt_nums = []
+    for element in nums:
+        encrypt_nums.append(rsa_encrypt_element(element, pub_key, n))
+
+    return encrypt_nums
+
+
+def rsa_decrypt(encrypt_nums, priv_key, n):
+    decrypt_nums = []
+    for element in encrypt_nums:
+        decrypt_nums.append(rsa_decrypt_element(element, priv_key, n))
 
     return decrypt_nums

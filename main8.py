@@ -2,7 +2,7 @@ import Acrypt as acrypt
 import math
 import time
 import random
-from sympy import discrete_log
+import re
 
 from pathlib import Path
 
@@ -529,7 +529,6 @@ def task5_3():
     c2 = 2110264777
 
     priv_key = acrypt.shanks_method(g, pub_key, p)
-    # priv_key = discrete_log(p, pub_key, g)
     print(f'a = {priv_key}')
 
     m = acrypt.elgamal_decrypt_element(priv_key, p, c1, c2)
@@ -569,7 +568,7 @@ def task5_5():
     block_size = 3
     message_length = 1849
 
-    priv_key = discrete_log(p, pub_key, g)
+    priv_key = acrypt.shanks_method(g, pub_key, p)
     print(f'a = {priv_key}')
 
     raw_encrypted_data = read_write_file.read_data_1byte(Path('resources', '8', 't24_ElG_c.txt'))
@@ -580,6 +579,166 @@ def task5_5():
 
     output_path = Path('resources', '8', 'dec_t24_ElG_c.txt')
     read_write_file.write_data_1byte(output_path, recovered_data)
+    print(f"Файл успешно расшифрован и сохранён в {output_path}")
+    print('\n')
+
+
+''' Задание 5.6'''
+
+
+def task5_6_():
+    print(f'Задание 5.6*')
+    m = 1001433323424
+    pub_key, n, priv_key = acrypt.rsa_choice_of_parameters([m])
+    encrypt_m = acrypt.rsa_encrypt_element(m, pub_key, n)
+    decrypt_m = acrypt.rsa_decrypt_element(encrypt_m, priv_key, n)
+    print(f'm_ = {decrypt_m}')
+
+
+''' Задание 5.6'''
+
+
+def task5_6():
+    print(f'Задание 5.6')
+    data = read_write_file.read_data_1byte(Path('resources', '8', 'text.txt'))
+    length = len(data)
+    block_size = 3
+    print('message is : {}'.format(data))
+    nums = acrypt.dat2IntNums(data, block_size)
+
+    pub_key, n, priv_key = acrypt.rsa_choice_of_parameters(nums)
+    encrypt_nums = acrypt.rsa_encrypt(nums, pub_key, n)
+    read_write_file.write_numbers(Path('resources', '8', 'rsa_encrypt_file.txt'), encrypt_nums)
+
+    decrypt_data = acrypt.rsa_decrypt(encrypt_nums, priv_key, n)
+    print(f'nums = {nums}')
+    print(f'decrypt data = {decrypt_data}')
+    recovered_data = acrypt.IntNums2dat(decrypt_data, length, block_size)
+    read_write_file.write_data_1byte(Path('resources', '8', 'rsa_decrypt_file.txt'), recovered_data)
+    print("recovered data = ", recovered_data)
+    print('\n')
+
+
+''' Задание 5.7'''
+
+
+def task5_7():
+    print(f'Задание 5.7')
+    p = 3347
+    q = 4019
+    pub_key = 773
+    len_data = 1899
+    block_size = 3
+    phi_n = (p - 1) * (q - 1)
+
+    priv_key = acrypt.inverse_el(pub_key, phi_n)
+
+    print(f'a = {priv_key}')
+    raw_encrypted_data = read_write_file.read_data_1byte(Path('resources', '8', 't27_rsa_c.txt'))
+    encrypt_nums = parse_encrypted_data(raw_encrypted_data)
+
+    decrypted_nums = acrypt.rsa_decrypt(encrypt_nums, priv_key, p * q)
+    recovered_data = acrypt.IntNums2dat(decrypted_nums, len_data, block_size)
+
+    output_path = Path('resources', '8', 'dec_t27_rsa_c.txt')
+    read_write_file.write_data_1byte(output_path, recovered_data)
+    print(f"Файл успешно расшифрован и сохранён в {output_path}")
+    print('\n')
+
+
+''' Задание 5.8'''
+
+
+def task5_8():
+    print(f'Задание 5.8')
+    n = 3035330611
+    pub_key = 13831
+    len_data = 1342
+    block_size = 4
+
+    p, q = 0, 0
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            p = i
+            q = n // i
+
+    phi_n = (p - 1) * (q - 1)
+
+    priv_key = acrypt.inverse_el(pub_key, phi_n)
+
+    print(f'a = {priv_key}')
+    raw_encrypted_data = read_write_file.read_data_1byte(Path('resources', '8', 't28_rsa_c.txt'))
+    encrypt_nums = parse_encrypted_data(raw_encrypted_data)
+
+    decrypted_nums = acrypt.rsa_decrypt(encrypt_nums, priv_key, n)
+    recovered_data = acrypt.IntNums2dat(decrypted_nums, len_data, block_size)
+
+    output_path = Path('resources', '8', 'dec_t28_rsa_c.txt')
+    read_write_file.write_data_1byte(output_path, recovered_data)
+    print(f"Файл успешно расшифрован и сохранён в {output_path}")
+    print('\n')
+
+
+''' Задание 5.9'''
+
+
+def task5_9():
+    print(f'Задание 5.4')
+    n = 18923
+    pub_key = 1261
+    block_size = 3
+
+    encrypt_nums = [12423, 11524, 7243, 7459, 14303, 6127, 10964, 16399,
+                    9792, 13629, 14407, 18817, 18830, 13556, 3159, 16647,
+                    5300, 13951, 81, 8986, 8007, 13167, 10022, 17213,
+                    2264, 961, 17459, 4101, 2999, 14569, 17183, 15827,
+                    12693, 9553, 18194, 3830, 2664, 13998, 12501, 18873,
+                    12161, 13071, 16900, 7233, 8270, 17086, 9792, 14266,
+                    13236, 5300, 13951, 8850, 12129, 6091, 18110, 3332,
+                    15061, 12347, 7817, 7946, 11675, 13924, 13892, 18031,
+                    2620, 6276, 8500, 201, 8850, 11178, 16477, 10161,
+                    3533, 13842, 7537, 12259, 18110, 44, 2364, 15570,
+                    3460, 9886, 8687, 4481, 11231, 7547, 11383, 17910,
+                    12867, 13203, 5102, 4742, 5053, 15407, 2976, 9330,
+                    12192, 56, 2471, 15334, 841, 13995, 17592, 13297,
+                    2430, 9741, 11675, 424, 6686, 738, 13874, 8168,
+                    7913, 6246, 14301, 1144, 9056, 15967, 7328, 13203,
+                    796, 195, 9872, 16979, 15404, 14130, 9105, 2001,
+                    9792, 14251, 1498, 11296, 1105, 4502, 16979, 1105,
+                    56, 4118, 11302, 5988, 3363, 15827, 6928, 4191,
+                    4277, 10617, 874, 13211, 11821, 3090, 18110, 44,
+                    2364, 15570, 3460, 9886, 9988, 3798, 1158, 9872,
+                    16979, 15404, 6127, 9872, 3652, 14838, 7437, 2540,
+                    1367, 2512, 14407, 5053, 1521, 297, 10935, 17137,
+                    2186, 9433, 13293, 7555, 13618, 13000, 6490, 5310,
+                    18676, 4782, 11374, 446, 4165, 11634, 3846, 14611,
+                    2364, 6789, 11634, 4493, 4063, 4576, 17955, 7965,
+                    11748, 14616, 11453, 17666, 925, 56, 4118, 18031,
+                    9522, 14838, 7437, 3880, 11476, 8305, 5102, 2999,
+                    18628, 14326, 9175, 9061, 650, 18110, 8720, 15404,
+                    2951, 722, 15334, 841, 15610, 2443, 11056, 2186]
+
+    p, q = 0, 0
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            p = i
+            q = n // i
+
+    phi_n = (p - 1) * (q - 1)
+
+    priv_key = acrypt.inverse_el(pub_key, phi_n)
+
+    decrypt_data = acrypt.rsa_decrypt(encrypt_nums, priv_key, n)
+    print(f'decrypt data = {decrypt_data[:50]}')
+
+    recovered_data = "".join(acrypt.decode_block(num) for num in decrypt_data)
+
+    print(recovered_data)
+    text = re.findall(r'[a-zA-Z]+', recovered_data)
+    formatted_text = " ".join(text)
+    output_path = Path('resources', '8', 'dec_5_9c.txt')
+    read_write_file.write_data_1byte(output_path, formatted_text.encode('utf-8'))
+    # print(formatted_text)
     print(f"Файл успешно расшифрован и сохранён в {output_path}")
     print('\n')
 
@@ -611,10 +770,15 @@ if __name__ == '__main__':
     # task4_10()
     # task4_11()
     # task4_12()
-    task4_13()
+    # task4_13()
     # task5()
     # task5_1()
     # task5_2()
     # task5_3()
     # task5_4()
     # task5_5()
+    # task5_6_()
+    # task5_6()
+    # task5_7()
+    # task5_8()
+    # task5_9()
