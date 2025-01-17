@@ -1,7 +1,10 @@
 from read_write_file import read_data_2byte as read2b
 from read_write_file import write_data_2byte as write2b
+from read_write_file import read_data_1byte as read1b
+from read_write_file import write_data_1byte as write1b
 
 import sys, os
+import detectEnglish
 
 from pathlib import Path
 
@@ -59,14 +62,13 @@ def find_inv_matrix(matrix, mod, n):
                         return [[i, j], [k, l]]
 
 def rcon(cnt, mod, n):
-    x = 2**(cnt + 2)
     if cnt == 1:
-        return x * (2**n)
+        return 0b10000000
     elif cnt == 2:
-        mask = 2 ** n - 1
-        return (mod & mask) * (2**n)
+        return 0b00110000
     else:
         return -1
+
 
 def subNib(w):
     subNib = [[0x9, 0x4, 0xA, 0xB],
@@ -228,140 +230,259 @@ def decrypt2b(data, key, mod, n, mixMatrix):
 
     return joinMatrixToStr(addKeyToMatrix(matrix2, key))
 
+
 def task1():
     mod = 0b10011
     n = 4
     matrix = [[1, 4], [4, 1]]
-    inv_matrix = find_inv_matrix(matrix,mod,n)
+    key = 834
+    inv_matrix = find_inv_matrix(matrix, mod, n)
     data = read2b(Path('resources', '6', 'dd1_saes_c_all.bmp'))
     dec_data = []
 
     for d in data:
-        dec = decrypt2b(d, 834, mod, n, inv_matrix)
+        dec = decrypt2b(d, key, mod, n, inv_matrix)
         dec_data.append(dec)
 
     write2b(Path('resources', '6', 'dd1_saes_c_all_dec.bmp'), dec_data)
+
+    no_encrypt_size = 50
+    encrypt_data = []
+    for i in range(len(dec_data)):
+        if i < no_encrypt_size:
+            # Оставляем первые 50 байт без изменений
+            encrypt_data.append(dec_data[i])
+        else:
+            # Для оставшихся байтов шифруем в режиме ECB
+            encrypted_block = encrypt2b(dec_data[i], key, mod, 4, matrix)
+            encrypt_data.append(encrypted_block)
+
+    write2b(Path('resources', '6', 'dd1_saes_c_all_dec_re_encrypted.bmp'), encrypt_data)
+
     return
+
 
 def task2():
     mod = 0b10011
     n = 4
+    key = 2318
     matrix = [[0xB, 0x4], [0xE, 0xD]]
-    inv_matrix = find_inv_matrix(matrix,mod,n)
+    inv_matrix = find_inv_matrix(matrix, mod, n)
     data = read2b(Path('resources', '6', 'im43_saes_c_all.bmp'))
     dec_data = []
 
     for d in data:
-        dec = decrypt2b(d, 2318, mod, n, inv_matrix)
+        dec = decrypt2b(d, key, mod, n, inv_matrix)
         dec_data.append(dec)
 
     write2b(Path('resources', '6', 'im43_saes_c_all_dec.bmp'), dec_data)
+
+    no_encrypt_size = 50
+    encrypt_data = []
+
+    for i in range(len(dec_data)):
+        if i < no_encrypt_size:
+            # Оставляем первые 50 байт без изменений
+            encrypt_data.append(dec_data[i])
+        else:
+            # Для оставшихся байтов шифруем в режиме ECB
+            encrypted_block = encrypt2b(dec_data[i], key, mod, 4, matrix)
+            encrypt_data.append(encrypted_block)
+
+    write2b(Path('resources', '6', 'im43_saes_c_all_dec_re_encrypted.bmp'), encrypt_data)
     return
+
 
 def task3():
-    mod = 0b10011
-    n = 4
-    matrix = [[0xA, 0xC], [0x8, 0x6]]
-    inv_matrix = find_inv_matrix(matrix,mod,n)
+    matrix22 = [[0xA, 0xC], [0x8, 0x6]]
+    mod = 0b11001
+    inv_matrix = find_inv_matrix(matrix22, mod, 4)
+    IV = 456
+    key = 1021
     data = read2b(Path('resources', '6', 'dd5_saes_cbc_c_all.bmp'))
     dec_data = []
-    IV = 456
-
     for d in data:
-        dec = decrypt2b(d, 1021, mod, n, inv_matrix)
-        dec_data.append(dec)
-        # dec_data.append(dec ^ IV)
-        # IV = d
+        dec = decrypt2b(d, key, mod, 4, inv_matrix)
+        dec_data.append(dec ^ IV)
+        IV = d
 
     write2b(Path('resources', '6', 'dd5_saes_cbc_c_all_dec.bmp'), dec_data)
+
+    no_encrypt_size = 50
+    encrypt_data = []
+
+    for i in range(len(dec_data)):
+        if i < no_encrypt_size:
+            # Оставляем первые 50 байт без изменений
+            encrypt_data.append(dec_data[i])
+        else:
+            # Для оставшихся байтов шифруем в режиме CBC
+            current_byte = dec_data[i]
+            previous_block = encrypt_data[-1] if len(encrypt_data) > 0 else IV
+            encrypted_block = encrypt2b(previous_block, key, mod, 4, matrix22)
+            encrypt_data.append(encrypted_block ^ current_byte)
+
+    # Сохраняем зашифрованные данные
+    write2b(Path('resources', '6', 'dd5_saes_cbc_c_all_dec_re_encrypted.bmp'), encrypt_data)
     return
+
 
 def task4():
-    mod = 0b11001
-    n = 4
-    matrix = [[0x5, 0x3], [0x2, 0xC]]
-    inv_matrix = find_inv_matrix(matrix,mod,n)
-    data = read2b(Path('resources', '6', 'dd8_saes_ofb_c_all.bmp'))
-    dec_data = []
+    matrix = [[5, 3], [2, 12]]
+    mod = int('11001', 2)
+    key = 12345
     IV = 5171
 
+    data = read2b(Path('resources', '6', 'dd8_saes_ofb_c_all.bmp'))
+    dec_data = []
+
     for d in data:
-        x = encrypt2b(d, 12345, mod, n, inv_matrix)
-        d = d ^ x
-        IV = x
-        dec_data.append(d)
+        IV = encrypt2b(IV, key, mod, 4, matrix)
+        dec_data.append(IV ^ d)
 
     write2b(Path('resources', '6', 'dd8_saes_ofb_c_all_dec.bmp'), dec_data)
+
+    no_encrypt_size = 50
+    encrypt_data = []
+
+    for i in range(len(dec_data)):
+        if i < no_encrypt_size:
+            # Оставляем первые 50 байт без изменений
+            encrypt_data.append(dec_data[i])
+        else:
+            # Для оставшихся байтов шифруем в режиме OFB
+            current_IV = IV
+            encrypted_IV = encrypt2b(current_IV, key, mod, 4, matrix)
+            encrypted_block = encrypted_IV ^ dec_data[i]
+            encrypt_data.append(encrypted_block)
+
+            IV = encrypted_IV
+
+    write2b(Path('resources', '6', 'dd8_saes_ofb_c_all_dec_re_encrypted.bmp'), encrypt_data)
     return
 
+
+def task5():
+    matrix = [[3, 8], [2, 11]]
+    mod = int('10011', 2)
+    partial_key = int('011110110', 2)
+    iv = 3523
+
+    data = read1b(Path('resources', '6', 't20_saes_ofb_c_all.txt'))
+
+    k = 0
+    while True:
+        # Формируем полный ключ из текущего значения k и известных младших битов
+        key = (k << 9) | partial_key
+
+        dec_data = []
+        current_iv = iv
+
+        for d in data:
+            current_iv = encrypt2b(current_iv, key, mod, 4, matrix)
+            dec_byte = (current_iv ^ d) & 0xFF  # Ограничиваем до 1 байта
+            dec_data.append(dec_byte)
+
+        # Преобразуем расшифрованные данные в текст
+        try:
+            txt = ''.join(chr(b) for b in dec_data)
+        except ValueError:
+            txt = ''.join(chr(b) if 0 <= b <= 255 else '?' for b in dec_data)
+
+        print(f"Trying key: {key} (k={k})")
+        print(f"Decrypted text: {txt[:50]}")
+
+        if detectEnglish.isEnglish(txt):
+            print(f"Found key: {key} (k={k})")
+            write1b(Path('resources', '6', 't20_saes_ofb_c_all_dec.txt'), dec_data)
+            break
+
+        k += 1
+
+        if k >= 128:
+            print("Ключ не найден")
+            break
+    return
+
+
 def task6():
-    mod = 0b10011
-    n = 4
-    matrix = [[0x7, 0xD], [0x4, 0x5]]
-    inv_matrix = find_inv_matrix(matrix,mod,n)
-    data = read2b(Path('resources', '6', 'dd10_saes_cfb_c_all.bmp'))
-    dec_data = []
+    matrix = [[7, 13], [4, 5]]
+    mod = int('11001', 2)
+    key = 24545
     IV = 9165
 
+    data = read2b(Path('resources', '6', 'dd10_saes_cfb_c_all.bmp'))
+    dec_data = []
+
     for d in data:
-        dec = encrypt2b(IV, 24545, mod, n, inv_matrix)
+        dec = encrypt2b(IV, key, mod, 4, matrix)
         dec_data.append(dec ^ d)
         IV = d
 
     write2b(Path('resources', '6', 'dd10_saes_cfb_c_all_dec.bmp'), dec_data)
+
+    no_encrypt_size = 50
+    encrypt_data = []
+
+    for i in range(len(dec_data)):
+        if i < no_encrypt_size:
+            # Оставляем первые 50 байт без изменений
+            encrypt_data.append(dec_data[i])
+        else:
+            # Для оставшихся байтов шифруем в режиме CFB
+            current_IV = IV
+            encrypted_IV = encrypt2b(current_IV, key, mod, 4, matrix)
+            encrypted_block = encrypted_IV ^ dec_data[i]
+            encrypt_data.append(encrypted_block)
+
+            IV = encrypted_IV
+
+    write2b(Path('resources', '6', 'dd10_saes_cfb_c_all_dec_re_encrypted.bmp'), encrypt_data)
     return
+
 
 def task7():
-    mod = 0b11001
-    n = 4
-    matrix = [[0x7, 0x3], [0x2, 0xE]]
-    inv_matrix = find_inv_matrix(matrix,mod,n)
-    data = read2b(Path('resources', '6', 'dd12_saes_ctr_c_all.bmp'))
-    dec_data = []
+    matrix = [[7, 3], [2, 14]]
+    mod = int('10011', 2)
+    key = 2645
     IV = 23184
 
+    data = read2b(Path('resources', '6', 'dd12_saes_ctr_c_all.bmp'))
+    dec_data = []
+
     for d in data:
-        enc = encrypt2b(IV, 2645, mod, n, inv_matrix)
-        d = d ^ enc
+        a = encrypt2b(IV, key, mod, 4, matrix)
         IV += 1
-        dec_data.append(d)
+        dec_data.append(a ^ d)
 
     write2b(Path('resources', '6', 'dd12_saes_ctr_c_all_dec.bmp'), dec_data)
+
+    no_encrypt_size = 50
+    encrypt_data = []
+
+    for i in range(len(dec_data)):
+        if i < no_encrypt_size:
+            # Оставляем первые 50 байт без изменений
+            encrypt_data.append(dec_data[i])
+        else:
+            # Для оставшихся байтов шифруем в режиме CTR
+            current_IV = IV
+            encrypted_IV = encrypt2b(current_IV, key, mod, 4, matrix)
+            encrypted_block = encrypted_IV ^ dec_data[i]
+            encrypt_data.append(encrypted_block)
+
+            IV += 1
+
+    write2b(Path('resources', '6', 'dd12_saes_ctr_c_all_dec_re_encrypted.bmp'), encrypt_data)
     return
 
+
 if __name__ == '__main__':
-    
+    print('\n')
     task1()
     task2()
     task3()
     task4()
+    task5()
     task6()
     task7()
-
-    # res = find_inv_matrix(matrix, 0b10011, 4)
-    # res2 = rcon(1, 0b10011, 4)
-    # print(res)
-    # print(res2)
-    # res3 = rotNib(0b00111011)
-    # print(bin(res3))
-    # res4 = subNib(0b10110011)
-    # print(bin(res4))
-    # res5 = splitStrToMatrix(0b0110111101101011)
-    # print(res5)
-    # res6 = subNibToMatrix(res5)
-    # print(res6)
-    # res7 = swapEl(res6)
-    # print(res7)
-    # res8 = multiMatrix([[1, 4], [4, 1]], [[0xC, 0x1], [0x9, 0x6]], 0b10011, 4)
-    # print(res8)
-
-    # inv_matrix = find_inv_matrix(matrix,mod,n)
-    # res9 = encrypt2b(0b0110111101101011, 0b1010011100111011, mod, n, matrix)
-    # print(bin(res9))
-    # res10 = decrypt2b(0b0000011100111000, 0b1010011100111011, mod, n, inv_matrix)
-    # print(bin(res10))
-
-
-# data = read2b(Path('resources', '6', 'd5_spn_c_all.bmp'))
-    # write2b(Path('resources', '4', 'ex8_decrypt.bmp'), [])
-    # write2b(Path('resources', '4', 'ex8_50.bmp'), decrypt_data[:50] + data[50:])
