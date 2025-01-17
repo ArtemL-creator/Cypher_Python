@@ -165,17 +165,6 @@ def joinMatrixToStr(matrix):
     return res
 
 
-def subNibTmp(w):
-    subNib = [[0x9, 0x4, 0xA, 0xB],
-              [0xD, 0x1, 0x8, 0x5],
-              [0x6, 0x2, 0x0, 0x3],
-              [0xC, 0xE, 0xF, 0x7]]
-    mask2 = 3
-    first_first = w // 4
-    first_second = w & mask2
-    return subNib[first_first][first_second]
-
-
 def subNibToMatrix(matrix):
     a = sbox(matrix[0][0])
     b = sbox(matrix[0][1])
@@ -278,7 +267,6 @@ def task1():
             encrypt_data.append(encrypted_block)
 
     write2b(Path('resources', '6', 'dd1_saes_c_all_dec_re_encrypted.bmp'), encrypt_data)
-
     return
 
 
