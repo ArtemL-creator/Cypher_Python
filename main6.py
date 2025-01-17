@@ -81,6 +81,16 @@ def sbox(value):
     return SBOX_TABLE[value]
 
 
+def inv_sbox(value):
+    INV_SBOX_TABLE = [
+        0xA, 0x5, 0x9, 0xB,
+        0x1, 0x7, 0x8, 0xF,
+        0x6, 0x0, 0x2, 0x3,
+        0xC, 0x4, 0xD, 0xE
+    ]
+    return INV_SBOX_TABLE[value]
+
+
 def g(w, i, rcon1, rcon2, sbox):
     """
     g функция в алгоритме расширения ключа.
@@ -92,10 +102,10 @@ def g(w, i, rcon1, rcon2, sbox):
     n1 = sbox(n11)
     n1n0 = mux(n1, n0, 4)
     if i == 1:
-        rez = n1n0 ^ rcon1
+        res = n1n0 ^ rcon1
     else:
-        rez = n1n0 ^ rcon2
-    return rez
+        res = n1n0 ^ rcon2
+    return res
 
 
 def key_expansion(key, rcon1, rcon2, sbox):
@@ -115,10 +125,6 @@ def find_inv_matrix(matrix, mod, n):
         for j in range(0, 16):
             for k in range(0, 16):
                 for l in range(0, 16):
-                    # a = matrix[0][0] * i + matrix[0][1] * k
-                    # b = matrix[0][0] * j + matrix[0][1] * l
-                    # c = matrix[1][0] * i + matrix[1][1] * k
-                    # d = matrix[1][0] * j + matrix[1][1] * l
                     a = gf_multiply_modular(matrix[0][0], i, mod, n) ^ gf_multiply_modular(matrix[0][1], k, mod, n)
                     b = gf_multiply_modular(matrix[0][0], j, mod, n) ^ gf_multiply_modular(matrix[0][1], l, mod, n)
                     c = gf_multiply_modular(matrix[1][0], i, mod, n) ^ gf_multiply_modular(matrix[1][1], k, mod, n)
@@ -134,38 +140,6 @@ def rcon(cnt):
         return 0b00110000
     else:
         return -1
-
-
-def subNib(w):
-    subNib = [[0x9, 0x4, 0xA, 0xB],
-              [0xD, 0x1, 0x8, 0x5],
-              [0x6, 0x2, 0x0, 0x3],
-              [0xC, 0xE, 0xF, 0x7]]
-
-    mask4 = 2 ** 4 - 1
-    second = w & mask4
-    first = w // 16
-
-    mask2 = 3
-    first_first = first // 4
-    first_second = first & mask2
-    second_first = second // 4
-    second_second = second & mask2
-
-    first = subNib[first_first][first_second]
-    second = subNib[second_first][second_second]
-
-    res = second + first * 16
-
-    return res
-
-
-def rotNib(w):
-    mask = 2 ** 4 - 1
-    second = w & mask
-    first = w // 16
-    res = second * 16 + first
-    return res
 
 
 def splitStrToMatrix(w):
@@ -203,10 +177,10 @@ def subNibTmp(w):
 
 
 def subNibToMatrix(matrix):
-    a = subNibTmp(matrix[0][0])
-    b = subNibTmp(matrix[0][1])
-    c = subNibTmp(matrix[1][0])
-    d = subNibTmp(matrix[1][1])
+    a = sbox(matrix[0][0])
+    b = sbox(matrix[0][1])
+    c = sbox(matrix[1][0])
+    d = sbox(matrix[1][1])
 
     return [[a, b], [c, d]]
 
@@ -224,22 +198,11 @@ def multiMatrix(matrix1, matrix2, mod, n):
     return matrix
 
 
-def invSubNibTmp(w):
-    invSubNib = [[0xA, 0x5, 0x9, 0xB],
-                 [0x1, 0x7, 0x8, 0xF],
-                 [0x6, 0x0, 0x2, 0x3],
-                 [0xC, 0x4, 0xD, 0xE]]
-    mask2 = 3
-    first_first = w // 4
-    first_second = w & mask2
-    return invSubNib[first_first][first_second]
-
-
 def invSubNibToMatrix(matrix):
-    a = invSubNibTmp(matrix[0][0])
-    b = invSubNibTmp(matrix[0][1])
-    c = invSubNibTmp(matrix[1][0])
-    d = invSubNibTmp(matrix[1][1])
+    a = inv_sbox(matrix[0][0])
+    b = inv_sbox(matrix[0][1])
+    c = inv_sbox(matrix[1][0])
+    d = inv_sbox(matrix[1][1])
 
     return [[a, b], [c, d]]
 
@@ -379,7 +342,6 @@ def task3():
             encrypted_block = encrypt2b(previous_block, key, mod, 4, matrix22)
             encrypt_data.append(encrypted_block ^ current_byte)
 
-    # Сохраняем зашифрованные данные
     write2b(Path('resources', '6', 'dd5_saes_cbc_c_all_dec_re_encrypted.bmp'), encrypt_data)
     return
 
