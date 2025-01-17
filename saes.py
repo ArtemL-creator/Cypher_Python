@@ -128,8 +128,6 @@ class SAes():
     RCON1 = int('10000000', 2)
     RCON2 = int('00110000', 2)
     modulus = int('10011', 2)
-    # column_Matrix = list([['1', '4'], ['4', '1']])
-    # column_InvMatrix = list([['9', '2'], ['2', '9']])
     column_Matrix = None
     column_InvMatrix = None
     state_matrix = []
@@ -162,7 +160,6 @@ class SAes():
         m11_inv = hex(gf_multiply_modular(m11, det_inv, self.modulus, n_)).split('x')[-1]
 
         self.column_InvMatrix = list([[m11_inv, m01_inv], [m10_inv, m00_inv]])
-        # print(self.column_InvMatrix)
 
         print(1)
 
